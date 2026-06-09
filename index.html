@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المعجم الأكاديمي للمسماريات</title>
+    <meta name="description" content="معجم أكاديمي للمفردات الأكدية والسومرية — قاموس لابات">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&family=Scheherazade+New:wght@400;700&family=Noto+Sans+Cuneiform&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* ===================================================
+           المعجم الأكاديمي للمسماريات — Academic Style
+           =================================================== */
+
+        @font-face { font-family: 'Assyrian'; src: url('Assyrian.ttf'); }
+        @font-face { font-family: 'Babylonian'; src: url('Babylonian.ttf'); }
+        @font-face { font-family: 'Sumerian'; src: url('Sumerian.ttf'); }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        /* --- CSS Variables --- */
+        :root {
+            --bg: #fdfcf8;
+            --bg-card: #ffffff;
+            --text: #2c2c2c;
+            --text-secondary: #777;
+            --text-muted: #aaa;
+            --border: #e8e3da;
+            --border-light: #f0ede6;
+            --accent: #9a7b26;
+            --accent-light: #fdf6e3;
+            --red: #b5432a;
+            --cuneiform-color: #3a3a3a;
+            --line-color: #d4c8a8;
+            --dot-color: #c9a227;
+            --font-size-base: 16px;
+            --cuneiform-font: 'Sumerian', serif;
+        }
+
+        /* Dark theme */
+        body.dark {
+            --bg: #15151a;
+            --bg-card: #202025;
+            --text: #e0ddd5;
+            --text-secondary: #999;
+            --text-muted: #666;
+            --border: #333;
+            --border-light: #2a2a2f;
+            --accent: #e5b632;
+            --accent-light: #2a2518;
+            --red: #e06050;
+            --cuneiform-color: #d4c8a8;
+            --line-color: #555;
+            --dot-color: #e5b632;
+        }
+
+        body {
+            font-family: 'Cardo', 'ebl', 'Inter', -apple-system, sans-serif;
+            font-size: var(--font-size-base);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            direction: rtl;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ===== Pages ===== */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ===== TOP NAV ===== */
+        #topNav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-text-btn {
+            background: none;
+            border: none;
+            font-family: 'Amiri', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .nav-text-btn:hover {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+        .nav-text-btn.active {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+        }
+        .icon-btn:hover { color: var(--text); }
+
+        /* ===== SETTINGS PANEL ===== */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.15);
+            z-index: 800;
+        }
+        .overlay.open { display: block; }
+        body.dark .overlay.open { background: rgba(0,0,0,0.4); }
+
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: var(--bg-card);
+            z-index: 801;
+            border-right: 1px solid var(--border);
+            padding: 24px 20px;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+        .settings-panel.open { left: 0; }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Amiri', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .setting-group { margin-bottom: 22px; }
+        .setting-label {
+            font-family: 'Amiri', serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .setting-row { display: flex; gap: 6px; }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 8px 0;
+            font-family: 'Amiri', serif;
+            font-size: 0.88rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .toggle-btn.active {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .font-size-row { align-items: center; justify-content: center; gap: 14px; }
+        .size-btn {
+            width: 40px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .size-btn:hover { border-color: var(--accent); color: var(--accent); }
+        #fontSizeLabel { font-size: 0.85rem; color: var(--text-secondary); min-width: 24px; text-align: center; }
+
+        .setting-select {
+            width: 100%;
+            padding: 9px 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+            direction: ltr;
+        }
+        .setting-select:focus { border-color: var(--accent); }
+        .setting-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+
+        /* ===== HOME PAGE ===== */
+        .home-head {
+            text-align: center;
+            padding: 48px 24px 24px;
+        }
+        .home-cuneiform {
+            font-family: var(--cuneiform-font);
+            font-size: 2.8rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .home-head h1 {
+            font-family: 'Amiri', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .home-sub {
+            font-family: 'Amiri', serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .cats-list {
+            max-width: 480px;
+            margin: 16px auto 40px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .cat-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: right;
+        }
+        .cat-btn:hover {
+            border-color: var(--dot-color);
+            background: var(--accent-light);
+        }
+        .cat-label {
+            font-family: 'Amiri', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .cat-label-en {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        /* --- Search Page Wrap --- */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== SEARCH PAGE ===== */
+        .search-bar-row {
+            display: flex;
+            gap: 8px;
+            max-width: 620px;
+            margin: 24px auto 0;
+            padding: 0 20px;
+            transition: margin-top 0.4s ease;
+        }
+        .search-container.centered .search-bar-row {
+            margin-top: 30vh;
+        }
+        .search-bar-row input {
+            flex: 1;
+            padding: 12px 16px;
+            font-family: 'Amiri', serif;
+            font-size: 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text);
+            outline: none;
+            direction: rtl;
+            transition: border-color 0.2s;
+        }
+        .search-bar-row input::placeholder { color: var(--text-muted); }
+        .search-bar-row input:focus { border-color: var(--accent); }
+        .cat-switch {
+            padding: 12px 12px;
+            font-family: 'Amiri', serif;
+            font-size: 0.9rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text);
+            outline: none;
+            cursor: pointer;
+            direction: rtl;
+            flex-shrink: 0;
+        }
+        .cat-switch:focus { border-color: var(--accent); }
+
+        /* --- Live Search Results --- */
+        .search-results {
+            max-width: 620px;
+            margin: 16px auto;
+            padding: 0 20px;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sr-item {
+            padding: 18px 24px;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-radius: 12px;
+            transition: all 0.15s;
+            background: var(--bg-card);
+            margin-bottom: 10px;
+            direction: rtl;
+            min-height: 80px;
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .sr-item:hover { 
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        /* Fixed columns that do not shift based on content length */
+        .sr-part { 
+            display: flex; 
+            align-items: center; 
+            flex: 1 1 0; 
+            min-width: 0; 
+        }
+        
+        .sr-part-right { justify-content: flex-start; }
+        .sr-part-center { justify-content: center; text-align: center; }
+        .sr-part-left { 
+            justify-content: flex-end; 
+            direction: ltr; 
+            gap: 12px; 
+            flex-wrap: wrap;
+        }
+
+        .sr-name {
+            font-family: 'Amiri', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sr-akk {
+            font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+            direction: ltr;
+        }
+
+        .sr-cuneiform {
+            font-family: var(--cuneiform-font);
+            font-size: 2rem;
+            color: var(--accent);
+            line-height: 1;
+            word-break: break-all;
+        }
+
+        .sr-match-sum { 
+            font-family: 'Cardo', 'Inter', sans-serif; 
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- Expanded Entry Detail --- */
+        .entry-detail {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        .ed-head {
+            padding: 24px 0 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .ed-name-ar {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .ed-name-akk {
+            font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
+            font-size: small;
+            color: var(--text-secondary);
+            font-style: italic;
+            direction: ltr;
+            text-align: right;
+        }
+        .ed-cat {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* --- Readings --- */
+        .ed-readings {
+            position: relative;
+            padding-right: 28px;
+        }
+        .ed-readings::before {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--line-color);
+            border-radius: 2px;
+        }
+        .ed-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 0;
+            position: relative;
+            direction: rtl;
+            flex-wrap: wrap;
+        }
+        .ed-row-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            direction: ltr;
+        }
+        .ed-row::before {
+            content: '';
+            position: absolute;
+            right: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--dot-color);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+            z-index: 1;
+        }
+        .ed-sum {
+            font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            min-width: 160px;
+            letter-spacing: 0.02em;
+        }
+        .ed-labat {
+            font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--red);
+            min-width: 36px;
+            text-align: right;
+        }
+        .ed-cunei {
+            font-family: var(--cuneiform-font);
+            font-size: 2.2rem;
+            color: var(--cuneiform-color);
+            line-height: 1;
+            letter-spacing: 0.04em;
+            word-break: break-all;
+        }
+
+        /* --- Map Page & Elements --- */
+        .page-header {
+            text-align: center;
+            padding: 32px 20px;
+        }
+        .page-header h2 {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .full-map-wrap {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+        #mainMap {
+            width: 100%;
+            height: 480px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        /* Hide leaflet attribution */
+        .leaflet-control-attribution { display: none !important; }
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.1) !important;
+            font-family: 'Amiri', serif !important;
+        }
+        .leaflet-popup-content {
+            margin: 10px 14px !important;
+            direction: rtl;
+            text-align: right;
+            line-height: 1.5;
+        }
+        .popup-name { font-weight: 700; font-size: 1rem; color: #2c2c2c; }
+        .popup-akk { font-size: 0.8rem; color: #888; font-style: italic; direction: ltr; text-align: right; }
+
+        /* --- About Page --- */
+        .about-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+        .about-content h2 {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+        .about-content p {
+            font-family: 'Amiri', serif;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 16px;
+        }
+        .about-content h3 {
+            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+        .about-sources-list {
+            padding-right: 20px;
+        }
+        .about-sources-list li {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 2;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .search-bar-row { flex-direction: column; gap: 8px; }
+            .ed-row { gap: 10px; flex-wrap: wrap; }
+            .ed-sum { min-width: auto; }
+            .ed-cunei { font-size: 1.8rem; }
+            .settings-panel { width: 280px; }
+            .nav-right { gap: 4px; }
+            .nav-text-btn { font-size: 0.95rem; padding: 6px 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="topNav">
+        <div class="nav-right" style="flex:1;">
+            <h2 style="font-family:'Amiri', serif; font-size:1.2rem; color:var(--text); margin:0;" data-i18n="title">المعجم الأكاديمي للمسماريات</h2>
+        </div>
+        <div class="nav-left">
+            <button id="settingsBtn" class="icon-btn" aria-label="Settings">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            </button>
+            <button id="backBtn" class="icon-btn" style="display:none;" aria-label="Back">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <div id="settingsOverlay" class="overlay"></div>
+    <div id="settingsPanel" class="settings-panel">
+        <div class="settings-header">
+            <span data-i18n="settings">الإعدادات</span>
+            <button id="closeSettings" class="icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+
+        <div class="setting-group" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+            <button id="navHome" class="toggle-btn active" data-i18n="nav_home">الرئيسية</button>
+            <button id="navMap" class="toggle-btn" data-i18n="nav_map">خريطة المدن</button>
+            <button id="navAbout" class="toggle-btn" data-i18n="nav_about">حول المعجم</button>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label" data-i18n="language">اللغة</div>
+            <div class="setting-row">
+                <button class="toggle-btn active" data-lang="ar">العربية</button>
+                <button class="toggle-btn" data-lang="en">English</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label" data-i18n="reading_mode">وضع القراءة</div>
+            <div class="setting-row">
+                <button class="toggle-btn active" data-theme="light" data-i18n="day_mode">نهاري</button>
+                <button class="toggle-btn" data-theme="dark" data-i18n="night_mode">ليلي</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label" data-i18n="font_size">حجم الخط</div>
+            <div class="setting-row font-size-row">
+                <button class="size-btn" id="fontDecrease">A−</button>
+                <span id="fontSizeLabel">16</span>
+                <button class="size-btn" id="fontIncrease">A+</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label" data-i18n="cuneiform_font">الخط المسماري</div>
+            <select id="cuneiformFontSelect" class="setting-select">
+                <option value="Sumerian">سومرية (Sumerian)</option>
+                <option value="Babylonian">بابلية (Babylonian)</option>
+                <option value="Assyrian">آشورية (Assyrian)</option>
+            </select>
+            <div class="setting-hint" data-i18n="font_hint">اختر نوع الخط المسماري المفضل لديك</div>
+        </div>
+    </div>
+
+    <div id="homePage" class="page active">
+        <div class="home-head">
+            <div class="home-cuneiform">𒀭</div>
+            <h1 data-i18n="title">المعجم الأكاديمي للمسماريات</h1>
+            <p class="home-sub" data-i18n="subtitle">قاموس لابات — اختر فئة للبحث</p>
+        </div>
+        <div class="cats-list">
+            <button class="cat-btn" data-cat="all">
+                <span class="cat-label" data-i18n="cat_all">القاموس الشامل</span>
+                <span class="cat-label-en">Complete Dictionary</span>
+            </button>
+            <button class="cat-btn" data-cat="cities">
+                <span class="cat-label" data-i18n="cat_cities">المدن</span>
+                <span class="cat-label-en">Cities</span>
+            </button>
+            <button class="cat-btn" data-cat="gods">
+                <span class="cat-label" data-i18n="cat_gods">الآلهة</span>
+                <span class="cat-label-en">Gods</span>
+            </button>
+            <button class="cat-btn" data-cat="stars">
+                <span class="cat-label" data-i18n="cat_stars">النجوم</span>
+                <span class="cat-label-en">Stars</span>
+            </button>
+            <button class="cat-btn" data-cat="planets">
+                <span class="cat-label" data-i18n="cat_planets">الكواكب</span>
+                <span class="cat-label-en">Planets</span>
+            </button>
+            <button class="cat-btn" data-cat="months">
+                <span class="cat-label" data-i18n="cat_months">الأشهر</span>
+                <span class="cat-label-en">Months</span>
+            </button>
+            <button class="cat-btn" data-cat="demons">
+                <span class="cat-label" data-i18n="cat_demons">العفاريت</span>
+                <span class="cat-label-en">Demons</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="searchPage" class="page">
+        <div id="searchContainer" class="search-container centered">
+            <div class="search-bar-row">
+                <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="ابحث..." autocomplete="off" spellcheck="false">
+                <select id="catSwitch" class="cat-switch">
+                    <option value="all" data-i18n="cat_all">القاموس الشامل</option>
+                    <option value="cities" data-i18n="cat_cities">المدن</option>
+                    <option value="gods" data-i18n="cat_gods">الآلهة</option>
+                    <option value="stars" data-i18n="cat_stars">النجوم</option>
+                    <option value="planets" data-i18n="cat_planets">الكواكب</option>
+                    <option value="months" data-i18n="cat_months">الأشهر</option>
+                    <option value="demons" data-i18n="cat_demons">العفاريت</option>
+                </select>
+            </div>
+
+            <div id="searchResults" class="search-results"></div>
+        </div>
+        <div id="entryDetail" class="entry-detail" style="display:none;"></div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; flex-direction:column; background:rgba(0,0,0,0.85); padding:20px;">
+        <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:2.5rem; cursor:pointer;">&times;</button>
+        <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:85vh; border-radius:8px; background:#fff;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
+    </div>
+
+    <div id="mapPage" class="page">
+        <div class="page-header">
+            <h2 data-i18n="map_title">خريطة المدن القديمة</h2>
+        </div>
+        <div class="full-map-wrap">
+            <div id="mainMap"></div>
+        </div>
+    </div>
+
+    <div id="aboutPage" class="page">
+        <div class="about-content">
+            <h2 data-i18n="about_title">التعريف الخاص بالموقع والمصادر</h2>
+            <p data-i18n="about_p1">هذا المعجم الأكاديمي مبني على أساس الجزء الأخير من قاموس لابات (Manuel d'épigraphie akkadienne) للعالم رينيه لابات، ويشمل المدن والآلهة والنجوم والكواكب والأشهر والعفاريت.</p>
+            <p data-i18n="about_p2">يُعتبر هذا الموقع أداة مساعدة للباحثين والطلاب في علم الآثار والمسماريات للبحث السريع عن المفردات السومرية والأكدية مع استخراج أرقام العلامات مباشرة.</p>
+            <h3 data-i18n="about_sources">المصادر الأساسية</h3>
+            <ul class="about-sources-list">
+                <li>Labat, R. & Malbran-Labat, F. — <em>Manuel d'épigraphie akkadienne</em></li>
+                <li>Borger, R. — <em>Mesopotamisches Zeichenlexikon (MesZL)</em></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        /* ===================================================
+           المعجم الأكدي السومري — قاعدة البيانات
+           Akkadian-Sumerian Lexicon Database
+           Based on Labat Sign List (Manuel d'épigraphie akkadienne)
+           =================================================== */
+
+        const DICTIONARY_DATA = {
+
+            // ============================================
+            // المدن — CITIES
+            // ============================================
+            cities: {
+                nameAr: "المدن",
+                nameEn: "Cities",
+                emoji: "🏛️",
+                entries: [
+                    {
+                        id: "babylon",
+                        nameAr: "مدينة بابل",
+                        nameAkk: "Babylone (Bābilu)",
+                        description: "بابل — عاصمة الإمبراطورية البابلية وأعظم مدن العالم القديم. تقع على نهر الفرات في وسط العراق. اشتهرت بحدائقها المعلقة وبوابة عشتار وبرج بابل (زقورة إيتيمينانكي). حكمها ملوك عظام مثل حمورابي ونبوخذ نصر الثاني.",
+                        sumerianReadings: [
+                            { sumerian: "E-KI", cuneiform: "𒂍𒆠", labat: 308, labatPage: "E = Labat 308" },
+                            { sumerian: "KÁ-DINGIR(-RA)", cuneiform: "𒆍𒀭𒊏", labat: 133, labatPage: "KÁ = Labat 133" },
+                            { sumerian: "KÁ-DINGIR(-MEŠ)", cuneiform: "𒆍𒀭𒈨𒌍", labat: 133, labatPage: "KÁ = Labat 133" },
+                            { sumerian: "KÁ-DIŠ(-DIŠ)", cuneiform: "𒆍𒁹𒁹", labat: 133, labatPage: "KÁ = Labat 133" },
+                            { sumerian: "NUN", cuneiform: "𒉣", labat: 87, labatPage: "NUN = Labat 87" },
+                            { sumerian: "ŠU-AN-NA", cuneiform: "𒋗𒀭𒈾", labat: 354, labatPage: "ŠU = Labat 354" },
+                            { sumerian: "TIN-TIR", cuneiform: "𒁷𒌁", labat: 465, labatPage: "TIN = Labat 465" },
+                            { sumerian: "(UD-)KIB-NUN", cuneiform: "𒌓𒄒𒉣", labat: 228, labatPage: "UD = Labat 228" }
+                        ],
+                        coordinates: { lat: 32.5421, lng: 44.4210 },
+                        keywords: ["بابل", "babylon", "babil", "بابليون", "bābilu", "babilu", "باب ايلي"]
+                    },
+                    {
+                        id: "nineveh",
+                        nameAr: "مدينة نينوى",
+                        nameAkk: "Ninua (Ninive)",
+                        description: "نينوى — عاصمة الإمبراطورية الآشورية الجديدة، تقع على نهر دجلة في شمال العراق (الموصل حالياً). اشتهرت بمكتبة آشوربانيبال التي ضمت آلاف الألواح المسمارية. من أقدم وأعظم المدن في تاريخ بلاد الرافدين.",
+                        sumerianReadings: [
+                            { sumerian: "NINA", cuneiform: "𒀏", labat: 86, labatPage: "NINA = Labat 86" },
+                            { sumerian: "NINA-KI", cuneiform: "𒀏𒆠", labat: 86, labatPage: "NINA = Labat 86" }
+                        ],
+                        coordinates: { lat: 36.3600, lng: 43.1530 },
+                        keywords: ["نينوى", "nineveh", "ninua", "نينا", "ninive"]
+                    },
+                    {
+                        id: "ur",
+                        nameAr: "مدينة أور",
+                        nameAkk: "Uru (Ur)",
+                        description: "أور — من أقدم المدن السومرية، تقع في جنوب العراق. مسقط رأس النبي إبراهيم حسب التقاليد. اشتهرت بزقورتها العظيمة والمقبرة الملكية التي اكتُشفت فيها كنوز عظيمة. كانت عاصمة سلالة أور الثالثة.",
+                        sumerianReadings: [
+                            { sumerian: "URIM", cuneiform: "𒋀𒀊", labat: 395, labatPage: "ŠEŠ = Labat 395" },
+                            { sumerian: "ŠEŠ-UNUG-KI", cuneiform: "𒋀𒀊𒆠", labat: 395, labatPage: "ŠEŠ = Labat 395" }
+                        ],
+                        coordinates: { lat: 30.9626, lng: 46.1031 },
+                        keywords: ["أور", "ur", "uru", "اور", "urim"]
+                    },
+                    {
+                        id: "uruk",
+                        nameAr: "مدينة أوروك (الوركاء)",
+                        nameAkk: "Uruk (Erech)",
+                        description: "أوروك — من أقدم المدن في تاريخ البشرية، يُعتقد أنها المكان الذي اختُرعت فيه الكتابة المسمارية. مدينة الملك كلكامش الأسطوري. تقع في جنوب العراق وتُعرف حالياً بالوركاء. كانت من أكبر المدن في العالم القديم.",
+                        sumerianReadings: [
+                            { sumerian: "UNUG", cuneiform: "𒀸𒆠", labat: 78, labatPage: "UNUG = Labat 78" },
+                            { sumerian: "UNUG-KI", cuneiform: "𒀸𒆠", labat: 78, labatPage: "UNUG = Labat 78" }
+                        ],
+                        coordinates: { lat: 31.3228, lng: 45.6367 },
+                        keywords: ["أوروك", "الوركاء", "uruk", "erech", "unug", "وركاء"]
+                    },
+                    {
+                        id: "nippur",
+                        nameAr: "مدينة نيبور (نفّر)",
+                        nameAkk: "Nibru (Nippur)",
+                        description: "نيبور — المركز الديني الرئيسي لسومر وأكد، مقر الإله إنليل كبير الآلهة. تقع في وسط جنوب العراق. لم تكن عاصمة سياسية لكنها كانت أهم مركز ديني وثقافي. اكتُشفت فيها آلاف النصوص الأدبية السومرية.",
+                        sumerianReadings: [
+                            { sumerian: "NIBRU", cuneiform: "𒂗𒆤", labat: 79, labatPage: "EN = Labat 79" },
+                            { sumerian: "EN-LÍL-KI", cuneiform: "𒂗𒆤𒆠", labat: 79, labatPage: "EN = Labat 79" }
+                        ],
+                        coordinates: { lat: 32.1264, lng: 45.2339 },
+                        keywords: ["نيبور", "نفر", "nippur", "nibru", "نبرو"]
+                    },
+                    {
+                        id: "eridu",
+                        nameAr: "مدينة أريدو",
+                        nameAkk: "Eridu",
+                        description: "أريدو — أقدم مدينة في العالم حسب القوائم السومرية الملكية. تقع في أقصى جنوب العراق. كانت مقر الإله إنكي (إيا) إله الحكمة والمياه العذبة. تُعتبر مهد الحضارة السومرية.",
+                        sumerianReadings: [
+                            { sumerian: "NUN-KI", cuneiform: "𒉣𒆠", labat: 87, labatPage: "NUN = Labat 87" },
+                            { sumerian: "ERIDUG", cuneiform: "𒉣𒆠", labat: 87, labatPage: "NUN = Labat 87" }
+                        ],
+                        coordinates: { lat: 30.8163, lng: 45.9943 },
+                        keywords: ["أريدو", "eridu", "eridug", "اريدو"]
+                    },
+                    {
+                        id: "ashur",
+                        nameAr: "مدينة آشور",
+                        nameAkk: "Aššur",
+                        description: "آشور — العاصمة الأولى والمدينة المقدسة للإمبراطورية الآشورية. سُميت باسم الإله آشور. تقع على نهر دجلة في شمال العراق. كانت مركزاً تجارياً ودينياً مهماً منذ الألف الثالث قبل الميلاد.",
+                        sumerianReadings: [
+                            { sumerian: "BAL-TIL-KI", cuneiform: "𒁄𒌁𒆠", labat: 9, labatPage: "BAL = Labat 9" },
+                            { sumerian: "ŠÀ-URU", cuneiform: "𒊮𒌷", labat: 353, labatPage: "ŠÀ = Labat 353" }
+                        ],
+                        coordinates: { lat: 35.4571, lng: 43.2593 },
+                        keywords: ["آشور", "اشور", "ashur", "aššur", "assur"]
+                    },
+                    {
+                        id: "lagash",
+                        nameAr: "مدينة لجش",
+                        nameAkk: "Lagaš",
+                        description: "لجش — مدينة سومرية مهمة في جنوب العراق. اشتهرت بحاكمها كوديا الذي بنى معابد فخمة وترك نصوصاً أدبية راقية. كانت مركزاً فنياً وثقافياً مهماً في العصر السومري الحديث.",
+                        sumerianReadings: [
+                            { sumerian: "LAGAŠ", cuneiform: "𒉢𒁓𒆷", labat: 89, labatPage: "ŠIR = Labat 89" },
+                            { sumerian: "ŠIR-BUR-LA-KI", cuneiform: "𒉢𒁓𒆷𒆠", labat: 89, labatPage: "ŠIR = Labat 89" }
+                        ],
+                        coordinates: { lat: 31.4069, lng: 46.4142 },
+                        keywords: ["لجش", "lagash", "lagaš", "لكش"]
+                    },
+                    {
+                        id: "sippar",
+                        nameAr: "مدينة سبار",
+                        nameAkk: "Sippar (Zimbir)",
+                        description: "سبار — مدينة بابلية مهمة على نهر الفرات شمال بابل. كانت مقر معبد الإله شمش (إله الشمس). اكتُشفت فيها مكتبة كبيرة من الألواح المسمارية. سُميت بالسومرية بعلامات تشير إلى الشمس.",
+                        sumerianReadings: [
+                            { sumerian: "UD-KIB-NUN-KI", cuneiform: "𒌓𒄒𒉣𒆠", labat: 228, labatPage: "UD = Labat 228" },
+                            { sumerian: "ZIMBIR", cuneiform: "𒌓𒄒𒉣𒆠", labat: 228, labatPage: "UD = Labat 228" }
+                        ],
+                        coordinates: { lat: 33.0606, lng: 44.2506 },
+                        keywords: ["سبار", "sippar", "zimbir", "سيبار"]
+                    },
+                    {
+                        id: "larsa",
+                        nameAr: "مدينة لارسا",
+                        nameAkk: "Larsa",
+                        description: "لارسا — مدينة سومرية بابلية في جنوب العراق. كانت عاصمة مملكة قوية نافست بابل في عهد الملك ريم-سين. مقر معبد الإله شمش. سقطت أمام حمورابي ملك بابل.",
+                        sumerianReadings: [
+                            { sumerian: "UD-UNUG-KI", cuneiform: "𒌓𒀸𒆠", labat: 228, labatPage: "UD = Labat 228" }
+                        ],
+                        coordinates: { lat: 31.2844, lng: 45.8528 },
+                        keywords: ["لارسا", "larsa", "لرسا"]
+                    },
+                    {
+                        id: "mari",
+                        nameAr: "مدينة ماري",
+                        nameAkk: "Mari",
+                        description: "ماري — مدينة قديمة على نهر الفرات في سوريا الحالية. كانت مركزاً تجارياً مهماً بين سومر والغرب. اكتُشف فيها أرشيف ضخم من الرسائل الملكية يكشف عن الحياة السياسية في الألف الثاني قبل الميلاد.",
+                        sumerianReadings: [
+                            { sumerian: "MA-RI-KI", cuneiform: "𒈠𒊑𒆠", labat: 342, labatPage: "MA = Labat 342" }
+                        ],
+                        coordinates: { lat: 34.5533, lng: 40.8861 },
+                        keywords: ["ماري", "mari", "مارى"]
+                    },
+                    {
+                        id: "akkad",
+                        nameAr: "مدينة أكد",
+                        nameAkk: "Akkade (Agade)",
+                        description: "أكد — عاصمة الإمبراطورية الأكدية التي أسسها سرجون الأكدي أول إمبراطور في التاريخ. لم يُعثر على موقعها الحقيقي حتى الآن. أعطت اسمها للغة الأكدية وللحضارة الأكدية بأكملها.",
+                        sumerianReadings: [
+                            { sumerian: "A-GA-DÈ-KI", cuneiform: "𒀀𒂵𒉈𒆠", labat: 1, labatPage: "A = Labat 1" },
+                            { sumerian: "URI-KI", cuneiform: "𒌵𒆠", labat: 395, labatPage: "URI = Labat 395" }
+                        ],
+                        coordinates: { lat: 33.1000, lng: 44.1000 },
+                        keywords: ["أكد", "اكد", "akkad", "agade", "akkade", "اكاد"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الآلهة — GODS
+            // ============================================
+            gods: {
+                nameAr: "الآلهة",
+                nameEn: "Gods",
+                emoji: "⚡",
+                entries: [
+                    {
+                        id: "anu",
+                        nameAr: "الإله آنو",
+                        nameAkk: "Anu (Anum)",
+                        description: "آنو — إله السماء وملك الآلهة في المجمع السومري الأكدي. أب الآلهة العظام. مقره السماوي هو الأعلى بين جميع الآلهة. معبده الرئيسي 'إيانا' في مدينة أوروك.",
+                        sumerianReadings: [
+                            { sumerian: "AN", cuneiform: "𒀭", labat: 13, labatPage: "AN = Labat 13" },
+                            { sumerian: "DINGIR", cuneiform: "𒀭", labat: 13, labatPage: "DINGIR = Labat 13" }
+                        ],
+                        keywords: ["آنو", "أنو", "anu", "anum", "انو", "إله السماء"]
+                    },
+                    {
+                        id: "enlil",
+                        nameAr: "الإله إنليل",
+                        nameAkk: "Enlil (Ellil)",
+                        description: "إنليل — إله الهواء والرياح والعواصف، ملك الآلهة الفعلي وحاكم الأرض. كان أقوى الآلهة في الفترة السومرية. مقره في مدينة نيبور في معبد 'إيكور'. هو الذي يمنح الملوكية.",
+                        sumerianReadings: [
+                            { sumerian: "EN-LÍL", cuneiform: "𒂗𒆤", labat: 79, labatPage: "EN = Labat 79" },
+                            { sumerian: "dEN-LÍL", cuneiform: "𒀭𒂗𒆤", labat: 79, labatPage: "EN = Labat 79" }
+                        ],
+                        keywords: ["إنليل", "انليل", "enlil", "ellil", "إله الرياح"]
+                    },
+                    {
+                        id: "enki",
+                        nameAr: "الإله إنكي (إيا)",
+                        nameAkk: "Ea (Enki)",
+                        description: "إنكي/إيا — إله الحكمة والمياه العذبة والسحر والفنون. أحد الآلهة الثلاثة الكبار. أنقذ البشرية من الطوفان بتحذير أوتنابشتم. مقره في 'الأبسو' (المياه العذبة الجوفية) ومعبده 'إيأبسو' في أريدو.",
+                        sumerianReadings: [
+                            { sumerian: "EN-KI", cuneiform: "𒂗𒆠", labat: 79, labatPage: "EN = Labat 79" },
+                            { sumerian: "dÉ-A", cuneiform: "𒀭𒂍𒀀", labat: 308, labatPage: "É = Labat 308" }
+                        ],
+                        keywords: ["إنكي", "إيا", "انكي", "ايا", "enki", "ea", "إله الحكمة"]
+                    },
+                    {
+                        id: "marduk",
+                        nameAr: "الإله مردوخ",
+                        nameAkk: "Marduk (Bēl)",
+                        description: "مردوخ — الإله الرئيسي لبابل وكبير الآلهة في الفترة البابلية. ابن إنكي. هزم تيامات (أم الفوضى) وخلق العالم من جسدها حسب ملحمة الخلق (إينوما إليش). معبده 'إيساكيلا' في بابل.",
+                        sumerianReadings: [
+                            { sumerian: "dAMAR-UTU", cuneiform: "𒀭𒀫𒌓", labat: 371, labatPage: "AMAR = Labat 371" },
+                            { sumerian: "dŠÚ-PA-È", cuneiform: "𒀭𒋙𒉺𒂊", labat: 354, labatPage: "ŠÚ = Labat 354" }
+                        ],
+                        keywords: ["مردوخ", "مردوك", "marduk", "bēl", "bel", "إله بابل"]
+                    },
+                    {
+                        id: "ishtar",
+                        nameAr: "الإلهة عشتار (إنانا)",
+                        nameAkk: "Ištar (Inanna)",
+                        description: "عشتار/إنانا — إلهة الحب والحرب والخصوبة. أهم إلهة في بلاد الرافدين. نزلت إلى العالم السفلي لمواجهة أختها إرشكيجال. سُميت باسمها بوابة عشتار الشهيرة في بابل. مقرها معبد 'إيانا' في أوروك.",
+                        sumerianReadings: [
+                            { sumerian: "dINANNA", cuneiform: "𒀭𒈹", labat: 58, labatPage: "MÚŠ = Labat 58" },
+                            { sumerian: "d15 (DIŠTAR)", cuneiform: "𒀭𒌋𒌋𒌋", labat: 480, labatPage: "DIŠ = Labat 480" }
+                        ],
+                        keywords: ["عشتار", "إنانا", "انانا", "ishtar", "inanna", "إلهة الحب"]
+                    },
+                    {
+                        id: "shamash",
+                        nameAr: "الإله شمش (أوتو)",
+                        nameAkk: "Šamaš (Utu)",
+                        description: "شمش/أوتو — إله الشمس والعدالة. يرى كل شيء في رحلته اليومية عبر السماء. أعطى قوانين العدالة للملك حمورابي. معبده 'إيبّارا' في مدينتي سبار ولارسا. ابن الإله سين (القمر).",
+                        sumerianReadings: [
+                            { sumerian: "dUTU", cuneiform: "𒀭𒌓", labat: 228, labatPage: "UTU = Labat 228" },
+                            { sumerian: "UD", cuneiform: "𒀭𒌓", labat: 228, labatPage: "UD = Labat 228" }
+                        ],
+                        keywords: ["شمش", "أوتو", "اوتو", "shamash", "utu", "šamaš", "إله الشمس"]
+                    },
+                    {
+                        id: "sin",
+                        nameAr: "الإله سين (نانا)",
+                        nameAkk: "Sîn (Nanna)",
+                        description: "سين/نانا — إله القمر، من أهم الآلهة في بلاد الرافدين. أب الإله شمش (الشمس) وعشتار. معبده 'إيكشنوجال' في مدينة أور. كان مركز عبادته في حرّان أيضاً.",
+                        sumerianReadings: [
+                            { sumerian: "dNANNA", cuneiform: "𒀭𒋀𒆠", labat: 395, labatPage: "ŠEŠ = Labat 395" },
+                            { sumerian: "d30", cuneiform: "𒀭𒌍", labat: 472, labatPage: "30 = Labat 472" }
+                        ],
+                        keywords: ["سين", "نانا", "sin", "nanna", "sîn", "إله القمر"]
+                    },
+                    {
+                        id: "adad",
+                        nameAr: "الإله أدد (إشكور)",
+                        nameAkk: "Adad (Iškur)",
+                        description: "أدد/إشكور — إله العواصف والرعد والمطر. يمكن أن يكون مدمراً أو خيّراً بحسب مشيئته. يُصوَّر ممسكاً بالصاعقة ويقف على ثور. مهم للزراعة لأنه يتحكم في الأمطار.",
+                        sumerianReadings: [
+                            { sumerian: "dIŠKUR", cuneiform: "𒀭𒅎", labat: 399, labatPage: "IM = Labat 399" },
+                            { sumerian: "dIM", cuneiform: "𒀭𒅎", labat: 399, labatPage: "IM = Labat 399" }
+                        ],
+                        keywords: ["أدد", "إشكور", "ادد", "اشكور", "adad", "iškur", "ishkur", "إله العواصف"]
+                    },
+                    {
+                        id: "nergal",
+                        nameAr: "الإله نرجال",
+                        nameAkk: "Nergal (Erra)",
+                        description: "نرجال — إله العالم السفلي والأوبئة والحرب. زوج الإلهة إرشكيجال ملكة العالم السفلي. يُصوَّر كمحارب عنيف. ارتبط بالموت والدمار والطاعون. معبده 'إيمسلام' في مدينة كوثى.",
+                        sumerianReadings: [
+                            { sumerian: "dGÌR-UNUG-GAL", cuneiform: "𒀭𒄈𒀸𒃲", labat: 444, labatPage: "GÌR = Labat 444" },
+                            { sumerian: "dU-GUR", cuneiform: "𒀭𒌑𒄥", labat: 411, labatPage: "U = Labat 411" }
+                        ],
+                        keywords: ["نرجال", "نركال", "nergal", "erra", "إله العالم السفلي"]
+                    },
+                    {
+                        id: "nabu",
+                        nameAr: "الإله نابو",
+                        nameAkk: "Nabû",
+                        description: "نابو — إله الكتابة والحكمة والعلم. ابن الإله مردوخ. كاتب الآلهة وحافظ ألواح الأقدار. معبده 'إيزيدا' في مدينة بورسيبا القريبة من بابل. كان يُحتفل به في عيد رأس السنة (أكيتو).",
+                        sumerianReadings: [
+                            { sumerian: "dAG", cuneiform: "𒀭𒀝", labat: 127, labatPage: "AG = Labat 127" },
+                            { sumerian: "dPA", cuneiform: "𒀭𒉺", labat: 295, labatPage: "PA = Labat 295" }
+                        ],
+                        keywords: ["نابو", "نبو", "nabu", "nabû", "إله الكتابة"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // النجوم — STARS
+            // ============================================
+            stars: {
+                nameAr: "النجوم",
+                nameEn: "Stars",
+                emoji: "⭐",
+                entries: [
+                    {
+                        id: "sirius",
+                        nameAr: "نجم الشعرى اليمانية (سيريوس)",
+                        nameAkk: "Šukūdu (KAK.SI.SÁ)",
+                        description: "الشعرى اليمانية — ألمع نجم في السماء. عُرف عند البابليين باسم 'السهم' (شوكودو). كان مهماً في التقويم الفلكي البابلي وارتبط بالإلهة عشتار.",
+                        sumerianReadings: [
+                            { sumerian: "mulKAK-SI-SÁ", cuneiform: "𒀭𒆕𒋛𒁲", labat: 230, labatPage: "KAK = Labat 230" }
+                        ],
+                        keywords: ["سيريوس", "الشعرى", "sirius", "šukūdu", "kaksi"]
+                    },
+                    {
+                        id: "aldebaran",
+                        nameAr: "نجم الدبران",
+                        nameAkk: "Šūru (IS-LÈ)",
+                        description: "الدبران — النجم الأحمر اللامع في كوكبة الثور. عُرف عند البابليين باسم 'عين الثور'. كان من النجوم المهمة في الرصد الفلكي البابلي.",
+                        sumerianReadings: [
+                            { sumerian: "mulIS-LÈ", cuneiform: "𒀭𒅖𒈖", labat: 357, labatPage: "IS = Labat 357" },
+                            { sumerian: "mulGU₄-AN-NA", cuneiform: "𒀭𒄞𒀭𒈾", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["الدبران", "aldebaran", "šūru", "عين الثور"]
+                    },
+                    {
+                        id: "pleiades",
+                        nameAr: "الثريا (نجوم الثريا)",
+                        nameAkk: "Zappu (MUL.MUL)",
+                        description: "الثريا — عنقود النجوم الشهير في كوكبة الثور. عُرف عند البابليين بـ'النجوم' (مول.مول) وتعني 'النجم من النجوم'. كان بداية الأبراج البابلية.",
+                        sumerianReadings: [
+                            { sumerian: "mulMUL-MUL", cuneiform: "𒀭𒀯𒀯", labat: 129, labatPage: "MUL = Labat 129" }
+                        ],
+                        keywords: ["الثريا", "pleiades", "zappu", "مول مول"]
+                    },
+                    {
+                        id: "regulus",
+                        nameAr: "نجم قلب الأسد",
+                        nameAkk: "Šarru (LUGAL)",
+                        description: "قلب الأسد — النجم اللامع في كوكبة الأسد. عُرف عند البابليين باسم 'الملك' (شرّو). كان يُعتبر نجماً ملكياً ومرتبطاً بالملوكية والسلطة.",
+                        sumerianReadings: [
+                            { sumerian: "mulLUGAL", cuneiform: "𒀭𒈗", labat: 266, labatPage: "LUGAL = Labat 266" },
+                            { sumerian: "mulSHARRU", cuneiform: "𒀭𒈗", labat: 266, labatPage: "LUGAL = Labat 266" }
+                        ],
+                        keywords: ["قلب الأسد", "regulus", "šarru", "الملك", "lugal"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الكواكب — PLANETS
+            // ============================================
+            planets: {
+                nameAr: "الكواكب",
+                nameEn: "Planets",
+                emoji: "🪐",
+                entries: [
+                    {
+                        id: "jupiter",
+                        nameAr: "المشتري (نيبيرو/ساكوت)",
+                        nameAkk: "Nēberu / Sagmegar",
+                        description: "المشتري — أكبر كواكب المجموعة الشمسية. ارتبط عند البابليين بالإله مردوخ. كان يُسمى 'نيبيرو' (نقطة العبور) و'ساكميكار'. من أهم الكواكب في التنجيم البابلي.",
+                        sumerianReadings: [
+                            { sumerian: "mulSAG-ME-GAR", cuneiform: "𒀭𒊕𒈨𒃻", labat: 184, labatPage: "SAG = Labat 184" },
+                            { sumerian: "mulNÉ-BI-RU", cuneiform: "𒀭𒉈𒁉𒊒", labat: 313, labatPage: "NÉ = Labat 313" }
+                        ],
+                        keywords: ["المشتري", "jupiter", "nēberu", "neberu", "sagmegar", "مردوخ كوكب"]
+                    },
+                    {
+                        id: "venus",
+                        nameAr: "الزهرة (دلبات)",
+                        nameAkk: "Dilbat",
+                        description: "الزهرة — ألمع الكواكب في السماء. ارتبط بالإلهة عشتار/إنانا. كان يظهر كنجم الصباح ونجم المساء. كان له أهمية كبيرة في التنجيم والطقوس الدينية البابلية.",
+                        sumerianReadings: [
+                            { sumerian: "mulDIL-BAT", cuneiform: "𒀭𒀸𒁀", labat: 78, labatPage: "DIL = Labat 78" },
+                            { sumerian: "mulDILI-PAT", cuneiform: "𒀭𒀸𒁀", labat: 78, labatPage: "DIL = Labat 78" }
+                        ],
+                        keywords: ["الزهرة", "venus", "dilbat", "دلبات", "نجم عشتار"]
+                    },
+                    {
+                        id: "saturn",
+                        nameAr: "زحل (كيمانو)",
+                        nameAkk: "Kayyamānu",
+                        description: "زحل — الكوكب البطيء الحركة. ارتبط عند البابليين بالإله نينورتا أو شمش. سُمي 'كيمانو' أي 'الثابت' لبطء حركته الظاهرية. كان مهماً في التنبؤات الفلكية.",
+                        sumerianReadings: [
+                            { sumerian: "mulGENNA", cuneiform: "𒀭𒄀𒈾", labat: 441, labatPage: "GI = Labat 441" },
+                            { sumerian: "mulUDU-IDIM-SAG-UŠ", cuneiform: "𒀭𒇽𒅂𒊕𒍑", labat: 420, labatPage: "UDU = Labat 420" }
+                        ],
+                        keywords: ["زحل", "saturn", "kayyamānu", "كيمانو", "genna"]
+                    },
+                    {
+                        id: "mars",
+                        nameAr: "المريخ (صلبتانو)",
+                        nameAkk: "Ṣalbatānu",
+                        description: "المريخ — الكوكب الأحمر. ارتبط بالإله نرجال إله الحرب والموت. سُمي 'صلبتانو'. كان ظهوره يُعتبر نذير شؤم في التنجيم البابلي ومرتبطاً بالحروب والأوبئة.",
+                        sumerianReadings: [
+                            { sumerian: "mulṢAL-BAT-A-NI", cuneiform: "𒀭𒊩𒁀𒀀𒉌", labat: 493, labatPage: "ṢAL = Labat 493" },
+                            { sumerian: "mulAN-GE₆", cuneiform: "𒀭𒀭𒈪", labat: 13, labatPage: "AN = Labat 13" }
+                        ],
+                        keywords: ["المريخ", "mars", "ṣalbatānu", "صلبتانو", "نرجال كوكب"]
+                    },
+                    {
+                        id: "mercury",
+                        nameAr: "عطارد (شيخوتو)",
+                        nameAkk: "Šiḫṭu",
+                        description: "عطارد — أصغر الكواكب وأقربها إلى الشمس. ارتبط بالإله نابو إله الكتابة. كان صعب الرصد بسبب قربه من الشمس. سُمي 'شيخطو' أي 'القافز'.",
+                        sumerianReadings: [
+                            { sumerian: "mulUDU-IDIM-GU₄-UD", cuneiform: "𒀭𒇽𒅂𒄞𒌓", labat: 420, labatPage: "UDU = Labat 420" },
+                            { sumerian: "mulGU₄-UD", cuneiform: "𒀭𒄞𒌓", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["عطارد", "mercury", "šiḫṭu", "شيخطو", "نابو كوكب"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الأشهر — MONTHS
+            // ============================================
+            months: {
+                nameAr: "الأشهر",
+                nameEn: "Months",
+                emoji: "📅",
+                entries: [
+                    {
+                        id: "nisannu",
+                        nameAr: "نيسان (الشهر الأول)",
+                        nameAkk: "Nisannu",
+                        description: "نيسان — الشهر الأول في التقويم البابلي (مارس-أبريل). شهر عيد رأس السنة (أكيتو) حيث تُتلى ملحمة الخلق 'إينوما إليش'. بداية الربيع والسنة الجديدة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-BARAG-ZAG-GAR", cuneiform: "𒌗𒁈𒍠𒃻", labat: 92, labatPage: "BARAG = Labat 92" }
+                        ],
+                        keywords: ["نيسان", "nisannu", "الشهر الأول", "أكيتو"]
+                    },
+                    {
+                        id: "ayyaru",
+                        nameAr: "أيار (الشهر الثاني)",
+                        nameAkk: "Ayyāru",
+                        description: "أيار — الشهر الثاني في التقويم البابلي (أبريل-مايو). شهر مرتبط بالثور والزراعة. كان وقت الحصاد الأول في بلاد الرافدين.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-GU₄-SI-SÁ", cuneiform: "𒌗𒄞𒋛𒁲", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["أيار", "ayyāru", "ayyaru", "الشهر الثاني"]
+                    },
+                    {
+                        id: "simanu",
+                        nameAr: "سيوان (الشهر الثالث)",
+                        nameAkk: "Simānu",
+                        description: "سيوان — الشهر الثالث في التقويم البابلي (مايو-يونيو). مرتبط بموسم الحصاد والطقوس الزراعية.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-SIG₄-GA", cuneiform: "𒌗𒋞𒂵", labat: 384, labatPage: "SIG₄ = Labat 384" }
+                        ],
+                        keywords: ["سيوان", "simānu", "simanu", "الشهر الثالث"]
+                    },
+                    {
+                        id: "duzu",
+                        nameAr: "تموز (الشهر الرابع)",
+                        nameAkk: "Du'ūzu (Tammūz)",
+                        description: "تموز — الشهر الرابع في التقويم البابلي (يونيو-يوليو). سُمي باسم الإله تموز/دموزي حبيب عشتار الذي نزل إلى العالم السفلي. شهر الحداد والبكاء على تموز.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ŠU-NUMUN", cuneiform: "𒌗𒋗𒆰", labat: 354, labatPage: "ŠU = Labat 354" }
+                        ],
+                        keywords: ["تموز", "duzu", "du'ūzu", "tammūz", "الشهر الرابع", "دموزي"]
+                    },
+                    {
+                        id: "abu",
+                        nameAr: "آب (الشهر الخامس)",
+                        nameAkk: "Abu",
+                        description: "آب — الشهر الخامس في التقويم البابلي (يوليو-أغسطس). أحر أشهر السنة. كانت تُقام فيه طقوس خاصة بالنار والحرارة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-NE-NE-GAR", cuneiform: "𒌗𒉈𒉈𒃻", labat: 313, labatPage: "NE = Labat 313" }
+                        ],
+                        keywords: ["آب", "abu", "الشهر الخامس"]
+                    },
+                    {
+                        id: "ululu",
+                        nameAr: "أيلول (الشهر السادس)",
+                        nameAkk: "Ulūlu (Elūlu)",
+                        description: "أيلول — الشهر السادس في التقويم البابلي (أغسطس-سبتمبر). شهر التنقية والتطهير. بداية موسم الخريف.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-KIN-dINANNA", cuneiform: "𒌗𒆥𒀭𒈹", labat: 440, labatPage: "KIN = Labat 440" }
+                        ],
+                        keywords: ["أيلول", "ulūlu", "ululu", "الشهر السادس"]
+                    },
+                    {
+                        id: "tashritu",
+                        nameAr: "تشرين (الشهر السابع)",
+                        nameAkk: "Tašrītu",
+                        description: "تشرين — الشهر السابع في التقويم البابلي (سبتمبر-أكتوبر). شهر البدايات والانطلاقات. كان يُقام فيه عيد أكيتو الخريفي في بعض المدن.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-DU₆-KÙ", cuneiform: "𒌗𒇯𒆬", labat: 207, labatPage: "DU₆ = Labat 207" }
+                        ],
+                        keywords: ["تشرين", "tašrītu", "tashritu", "الشهر السابع"]
+                    },
+                    {
+                        id: "arahsamna",
+                        nameAr: "مرحشوان (الشهر الثامن)",
+                        nameAkk: "Araḫsamna",
+                        description: "مرحشوان — الشهر الثامن في التقويم البابلي (أكتوبر-نوفمبر). شهر بداية الأمطار والزراعة الشتوية في بلاد الرافدين.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-APIN-DU₈-A", cuneiform: "𒌗𒀳𒃮𒀀", labat: 100, labatPage: "APIN = Labat 100" }
+                        ],
+                        keywords: ["مرحشوان", "araḫsamna", "arahsamna", "الشهر الثامن"]
+                    },
+                    {
+                        id: "kislimu",
+                        nameAr: "كسليم (الشهر التاسع)",
+                        nameAkk: "Kislīmu",
+                        description: "كسليم — الشهر التاسع في التقويم البابلي (نوفمبر-ديسمبر). شهر البرد والشتاء. كانت تُقام فيه طقوس دينية خاصة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-GAN-GAN-È", cuneiform: "𒌗𒃶𒃶𒂊", labat: 253, labatPage: "GAN = Labat 253" }
+                        ],
+                        keywords: ["كسليم", "kislīmu", "kislimu", "الشهر التاسع"]
+                    },
+                    {
+                        id: "tebetu",
+                        nameAr: "طيبت (الشهر العاشر)",
+                        nameAkk: "Ṭebētu",
+                        description: "طيبت — الشهر العاشر في التقويم البابلي (ديسمبر-يناير). أبرد أشهر السنة. مرتبط بالانقلاب الشتوي.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-AB-BA-È", cuneiform: "𒌗𒀊𒁀𒂊", labat: 128, labatPage: "AB = Labat 128" }
+                        ],
+                        keywords: ["طيبت", "ṭebētu", "tebetu", "الشهر العاشر"]
+                    },
+                    {
+                        id: "shabatu",
+                        nameAr: "شباط (الشهر الحادي عشر)",
+                        nameAkk: "Šabāṭu",
+                        description: "شباط — الشهر الحادي عشر في التقويم البابلي (يناير-فبراير). شهر الرياح والعواصف. اسمه يعني 'الضرب' إشارة إلى قسوة الطقس.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ZÍZ-A", cuneiform: "𒌗𒍣𒀀", labat: 210, labatPage: "ZÍZ = Labat 210" }
+                        ],
+                        keywords: ["شباط", "šabāṭu", "shabatu", "الشهر الحادي عشر"]
+                    },
+                    {
+                        id: "addaru",
+                        nameAr: "آذار (الشهر الثاني عشر)",
+                        nameAkk: "Addaru (Adāru)",
+                        description: "آذار — الشهر الثاني عشر والأخير في التقويم البابلي (فبراير-مارس). شهر نهاية السنة والاستعداد للسنة الجديدة. كان يُضاف شهر آذار ثانٍ أحياناً لتعديل التقويم.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ŠE-KIN-KUD", cuneiform: "𒌗𒊺𒆥𒃮", labat: 367, labatPage: "ŠE = Labat 367" }
+                        ],
+                        keywords: ["آذار", "addaru", "adāru", "adaru", "الشهر الثاني عشر"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // العفاريت والشياطين — DEMONS
+            // ============================================
+            demons: {
+                nameAr: "العفاريت والشياطين",
+                nameEn: "Demons",
+                emoji: "👹",
+                entries: [
+                    {
+                        id: "lamashtu",
+                        nameAr: "لماشتو",
+                        nameAkk: "Lamaštu",
+                        description: "لماشتو — أخطر العفاريت الأنثوية في بلاد الرافدين. تهدد النساء الحوامل والأطفال الرضع. ابنة الإله آنو. كانت تُصوَّر برأس أسد وجسم حمار وأقدام طائر. كانت التمائم والتعاويذ ضرورية للحماية منها.",
+                        sumerianReadings: [
+                            { sumerian: "dDÌM-ME", cuneiform: "𒀭𒁴𒈨", labat: 167, labatPage: "DÌM = Labat 167" }
+                        ],
+                        keywords: ["لماشتو", "lamaštu", "lamashtu", "عفريتة"]
+                    },
+                    {
+                        id: "pazuzu",
+                        nameAr: "بازوزو",
+                        nameAkk: "Pazuzu",
+                        description: "بازوزو — ملك شياطين الرياح. كائن مخيف له وجه وحشي وأجنحة وذيل عقرب ومخالب. ورغم طبيعته الشريرة استُخدمت صوره كتمائم حماية ضد لماشتو. 'ملك شياطين الرياح الشريرة'.",
+                        sumerianReadings: [
+                            { sumerian: "dPA-ZU-ZU", cuneiform: "𒀭𒉺𒍪𒍪", labat: 295, labatPage: "PA = Labat 295" }
+                        ],
+                        keywords: ["بازوزو", "pazuzu", "ملك الشياطين", "شيطان الرياح"]
+                    },
+                    {
+                        id: "utukku",
+                        nameAr: "أوتوكو (الأوتوكو الشرير)",
+                        nameAkk: "Utukku lemnu",
+                        description: "أوتوكو — نوع من الشياطين أو الأرواح الشريرة التي تسكن الأماكن المهجورة والصحارى. يمكن أن تكون خيرة أو شريرة. 'الأوتوكو الشرير' (أوتوكو ليمنو) كان من أخطر الكائنات الخارقة.",
+                        sumerianReadings: [
+                            { sumerian: "UDUG", cuneiform: "𒌜", labat: 451, labatPage: "UDUG = Labat 451" },
+                            { sumerian: "UDUG-ḪUL", cuneiform: "𒌜𒅆𒌨", labat: 451, labatPage: "UDUG = Labat 451" }
+                        ],
+                        keywords: ["أوتوكو", "utukku", "udug", "شيطان", "روح شريرة"]
+                    },
+                    {
+                        id: "alu",
+                        nameAr: "آلو",
+                        nameAkk: "Alû",
+                        description: "آلو — شيطان بلا وجه وبلا فم وبلا أذن. يختبئ في الزوايا المظلمة ويهاجم الناس في الليل. كان يُعتبر من أكثر الشياطين رعباً لأنه يسلب الناس نومهم وعقولهم.",
+                        sumerianReadings: [
+                            { sumerian: "A-LÁ", cuneiform: "𒀀𒇲", labat: 1, labatPage: "A = Labat 1" }
+                        ],
+                        keywords: ["آلو", "alû", "alu", "شيطان بلا وجه"]
+                    },
+                    {
+                        id: "gallu",
+                        nameAr: "غالو (الغالو)",
+                        nameAkk: "Gallû",
+                        description: "غالو — شياطين العالم السفلي الذين يقتادون الموتى. هم الذين أسروا الإله تموز/دموزي بدلاً من عشتار عند صعودها من العالم السفلي. لا يعرفون الرحمة ولا يأكلون ولا يشربون.",
+                        sumerianReadings: [
+                            { sumerian: "GALLA", cuneiform: "𒃲𒆷", labat: 343, labatPage: "GAL = Labat 343" }
+                        ],
+                        keywords: ["غالو", "gallû", "gallu", "galla", "شياطين العالم السفلي"]
+                    },
+                    {
+                        id: "rabisu",
+                        nameAr: "رابصو (الكامن)",
+                        nameAkk: "Rābiṣu",
+                        description: "رابصو — شيطان يكمن في المداخل والأزقة والعتبات. يُترجم اسمه بـ'الكامن' أو 'المتربص'. كان يُعتقد أنه يتربص بالناس عند أبواب المنازل والمعابد.",
+                        sumerianReadings: [
+                            { sumerian: "MÁŠKIM", cuneiform: "𒈦𒆳", labat: 340, labatPage: "MAŠ = Labat 340" }
+                        ],
+                        keywords: ["رابصو", "rābiṣu", "rabisu", "maškim", "الكامن", "المتربص"]
+                    },
+                    {
+                        id: "lilitu",
+                        nameAr: "ليليتو (ليليث)",
+                        nameAkk: "Lilītu (Lilitû)",
+                        description: "ليليتو — روح أنثوية ليلية شريرة مرتبطة بالرياح والعواصف الليلية. اسمها مشتق من 'ليل' (الليل). تغوي الرجال في أحلامهم. أصل أسطورة ليليث في التقاليد اللاحقة.",
+                        sumerianReadings: [
+                            { sumerian: "KI-SIKIL-LÍL-LÁ", cuneiform: "𒆠𒂖𒆤𒇲", labat: 366, labatPage: "KI = Labat 366" }
+                        ],
+                        keywords: ["ليليتو", "ليليث", "lilītu", "lilitu", "lilitû", "lilith", "روح ليلية"]
+                    },
+                    {
+                        id: "asakku",
+                        nameAr: "أساكو",
+                        nameAkk: "Asakku",
+                        description: "أساكو — شيطان المرض والحمى. كان يُعتقد أنه يسبب الأوبئة والأمراض الخطيرة. هزمه الإله نينورتا في معركة أسطورية مشهورة وصلتنا في نص 'لوغال-إي'.",
+                        sumerianReadings: [
+                            { sumerian: "À-SÀG", cuneiform: "𒀀𒊮", labat: 1, labatPage: "À = Labat 1" }
+                        ],
+                        keywords: ["أساكو", "asakku", "شيطان المرض", "asag"]
+                    }
+                ]
+            }
+        };
+
+        // ============================================
+        // City Coordinates for Map
+        // ============================================
+        const MAP_CITIES = [];
+        Object.values(DICTIONARY_DATA).forEach(category => {
+            category.entries.forEach(entry => {
+                if (entry.coordinates) {
+                    MAP_CITIES.push({
+                        id: entry.id,
+                        nameAr: entry.nameAr,
+                        nameAkk: entry.nameAkk,
+                        coordinates: entry.coordinates,
+                        cuneiform: entry.sumerianReadings[0]?.cuneiform || '',
+                        sumerian: entry.sumerianReadings[0]?.sumerian || ''
+                    });
+                }
+            });
+        });
+
+        /* ===================================================
+           المعجم الأكاديمي للمسماريات — App Logic
+           =================================================== */
+
+        let currentLang = 'ar';
+        let currentCat = 'all';
+        let fontSize = 16;
+        let mainMapInstance = null;
+
+        // i18n translations
+        const i18n = {
+            ar: {
+                title: 'المعجم الأكاديمي للمسماريات',
+                subtitle: 'قاموس لابات — اختر فئة للبحث',
+                nav_home: 'الرئيسية',
+                nav_map: 'خريطة المدن',
+                nav_about: 'حول المعجم',
+                settings: 'الإعدادات',
+                language: 'اللغة',
+                reading_mode: 'وضع القراءة',
+                day_mode: 'نهاري',
+                night_mode: 'ليلي',
+                font_size: 'حجم الخط',
+                cuneiform_font: 'الخط المسماري',
+                font_hint: 'لاستخدام خطوط إضافية، أضف ملفات الخطوط إلى مجلد fonts',
+                search_placeholder: 'ابحث...',
+                cat_all: 'القاموس الشامل',
+                cat_cities: 'المدن',
+                cat_gods: 'الآلهة',
+                cat_stars: 'النجوم',
+                cat_planets: 'الكواكب',
+                cat_months: 'الأشهر',
+                cat_demons: 'العفاريت',
+                no_results: 'لا توجد نتائج',
+                map_title: 'خريطة المدن القديمة',
+                about_title: 'التعريف الخاص بالموقع والمصادر',
+                about_p1: 'هذا المعجم الأكاديمي مبني على أساس الجزء الأخير من قاموس لابات (Manuel d\'épigraphie akkadienne) للعالم رينيه لابات، ويشمل المدن والآلهة والنجوم والكواكب والأشهر والعفاريت.',
+                about_p2: 'يُعتبر هذا الموقع أداة مساعدة للباحثين والطلاب في علم الآثار والمسماريات للبحث السريع عن المفردات السومرية والأكدية مع استخراج أرقام العلامات مباشرة.',
+                about_sources: 'المصادر الأساسية'
+            },
+            en: {
+                title: 'Academic Cuneiform Lexicon',
+                subtitle: 'Labat Dictionary — Select a category',
+                nav_home: 'Home',
+                nav_map: 'Cities Map',
+                nav_about: 'About',
+                settings: 'Settings',
+                language: 'Language',
+                reading_mode: 'Reading Mode',
+                day_mode: 'Day',
+                night_mode: 'Night',
+                font_size: 'Font Size',
+                cuneiform_font: 'Cuneiform Font',
+                font_hint: 'To use additional fonts, add font files (.ttf/.otf) to the fonts folder',
+                search_placeholder: 'Search...',
+                cat_all: 'Complete Dictionary',
+                cat_cities: 'Cities',
+                cat_gods: 'Gods',
+                cat_stars: 'Stars',
+                cat_planets: 'Planets',
+                cat_months: 'Months',
+                cat_demons: 'Demons',
+                no_results: 'No results found',
+                map_title: 'Ancient Cities Map',
+                about_title: 'About the Lexicon & Sources',
+                about_p1: 'This academic lexicon is based on the final section of René Labat\'s Manuel d\'épigraphie akkadienne, covering cities, gods, stars, planets, months, and demons.',
+                about_p2: 'This site serves as a tool for researchers and students in archaeology and Assyriology to quickly search for Sumerian and Akkadian vocabulary and directly extract sign numbers.',
+                about_sources: 'Primary Sources'
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSettings();
+            initNavigation();
+            initCategories();
+            initSearch();
+        });
+
+        /* ===================================================
+           NAVIGATION (Top Nav)
+           =================================================== */
+        function initNavigation() {
+            const navHome = document.getElementById('navHome');
+            const navMap = document.getElementById('navMap');
+            const navAbout = document.getElementById('navAbout');
+            const backBtn = document.getElementById('backBtn');
+
+            function setActiveNav(btnId) {
+                [navHome, navMap, navAbout].forEach(btn => btn.classList.remove('active'));
+                document.getElementById(btnId).classList.add('active');
+            }
+
+            navHome.addEventListener('click', () => {
+                setActiveNav('navHome');
+                showPage('homePage');
+                backBtn.style.display = 'none';
+                document.getElementById('searchInput').value = ''; // clear search
+            });
+
+            navMap.addEventListener('click', () => {
+                setActiveNav('navMap');
+                showPage('mapPage');
+                backBtn.style.display = 'none';
+                setTimeout(initFullMap, 150);
+            });
+
+            navAbout.addEventListener('click', () => {
+                setActiveNav('navAbout');
+                showPage('aboutPage');
+                backBtn.style.display = 'none';
+            });
+
+            // The back button is only shown inside search results when viewing detail
+            backBtn.addEventListener('click', () => {
+                if (document.getElementById('entryDetail').style.display !== 'none') {
+                    document.getElementById('entryDetail').style.display = 'none';
+                    document.getElementById('searchResults').style.display = 'block';
+                } else {
+                    // If we are in search view, go back to home
+                    setActiveNav('navHome');
+                    showPage('homePage');
+                    backBtn.style.display = 'none';
+                }
+            });
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        /* ===================================================
+           SETTINGS
+           =================================================== */
+        function initSettings() {
+            const panel = document.getElementById('settingsPanel');
+            const overlay = document.getElementById('settingsOverlay');
+            const openBtn = document.getElementById('settingsBtn');
+            const closeBtn = document.getElementById('closeSettings');
+
+            openBtn.addEventListener('click', () => {
+                panel.classList.add('open');
+                overlay.classList.add('open');
+            });
+
+            function close() {
+                panel.classList.remove('open');
+                overlay.classList.remove('open');
+            }
+            closeBtn.addEventListener('click', close);
+            overlay.addEventListener('click', close);
+
+            // Language toggle
+            document.querySelectorAll('[data-lang]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-lang]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLang = btn.dataset.lang;
+                    applyLanguage();
+                });
+            });
+
+            // Theme toggle
+            document.querySelectorAll('[data-theme]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-theme]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (btn.dataset.theme === 'dark') {
+                        document.body.classList.add('dark');
+                    } else {
+                        document.body.classList.remove('dark');
+                    }
+                });
+            });
+
+            // Font size
+            document.getElementById('fontIncrease').addEventListener('click', () => {
+                if (fontSize < 24) {
+                    fontSize++;
+                    applyFontSize();
+                }
+            });
+            document.getElementById('fontDecrease').addEventListener('click', () => {
+                if (fontSize > 12) {
+                    fontSize--;
+                    applyFontSize();
+                }
+            });
+
+            // Cuneiform font
+            document.getElementById('cuneiformFontSelect').addEventListener('change', (e) => {
+                document.documentElement.style.setProperty('--cuneiform-font', `'${e.target.value}', serif`);
+            });
+        }
+
+        function applyFontSize() {
+            document.documentElement.style.fontSize = fontSize + 'px';
+            document.getElementById('fontSizeLabel').textContent = fontSize;
+        }
+
+        function applyLanguage() {
+            const t = i18n[currentLang];
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.dataset.i18n;
+                if (t[key]) el.textContent = t[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.dataset['i18nPlaceholder'];
+                if (t[key]) el.placeholder = t[key];
+            });
+        }
+
+        /* ===================================================
+           HOME CATEGORIES
+           =================================================== */
+        function initCategories() {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentCat = btn.dataset.cat;
+                    document.getElementById('catSwitch').value = currentCat;
+                    document.querySelectorAll('.nav-text-btn').forEach(b => b.classList.remove('active'));
+                    showPage('searchPage');
+                    document.getElementById('backBtn').style.display = 'flex';
+                    document.getElementById('searchResults').innerHTML = '';
+                    document.getElementById('entryDetail').style.display = 'none';
+                    setTimeout(() => document.getElementById('searchInput').focus(), 100);
+                });
+            });
+        }
+
+        /* ===================================================
+           SEARCH LOGIC
+           =================================================== */
+        function initSearch() {
+            const input = document.getElementById('searchInput');
+            const catSwitch = document.getElementById('catSwitch');
+
+            input.addEventListener('input', doSearch);
+            catSwitch.addEventListener('change', () => {
+                currentCat = catSwitch.value;
+                doSearch();
+            });
+        }
+
+        function doSearch() {
+            const q = document.getElementById('searchInput').value.trim().toLowerCase();
+            const area = document.getElementById('searchResults');
+            const detail = document.getElementById('entryDetail');
+            const container = document.getElementById('searchContainer');
+
+            detail.style.display = 'none';
+            area.style.display = 'block';
+
+            if (q.length === 0) {
+                area.innerHTML = '';
+                container.classList.add('centered');
+                return;
+            } else {
+                container.classList.remove('centered');
+            }
+
+            const results = [];
+            const cats = currentCat === 'all' ? Object.keys(DICTIONARY_DATA) : [currentCat];
+
+            cats.forEach(catKey => {
+                const catData = DICTIONARY_DATA[catKey];
+                if (!catData) return;
+
+                catData.entries.forEach(entry => {
+                    // Find matched Sumerian readings
+                    let matchedReadings = [];
+                    entry.sumerianReadings.forEach(r => {
+                        if (r.sumerian.toLowerCase().includes(q)) {
+                            matchedReadings.push(r);
+                        }
+                    });
+
+                    const matchAr = entry.nameAr.includes(q);
+                    const matchAkk = entry.nameAkk.toLowerCase().includes(q);
+                    const matchKw = entry.keywords.some(kw => kw.toLowerCase().includes(q));
+
+                    if (matchAr || matchAkk || matchKw || matchedReadings.length > 0) {
+                        let score = 0;
+                        if (matchAr) {
+                            if (entry.nameAr === q || entry.nameAr.includes(" " + q)) score += 100;
+                            else score += 50;
+                        }
+                        if (matchKw) {
+                            if (entry.keywords.includes(q)) score += 80;
+                            else score += 40;
+                        }
+                        if (matchedReadings.length > 0) score += 30;
+                        if (matchAkk) score += 20;
+                        
+                        results.push({ entry, catKey, score, matchedReadings });
+                    }
+                });
+            });
+
+            results.sort((a, b) => b.score - a.score);
+
+            if (results.length === 0) {
+                const t = i18n[currentLang];
+                area.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--text-muted);font-family:Amiri,serif;">${t.no_results}</div>`;
+                return;
+            }
+
+            // Render results
+            area.innerHTML = results.map((r, index) => {
+                let displayCunei = r.entry.sumerianReadings[0]?.cuneiform || '';
+                let displaySum = r.entry.sumerianReadings[0]?.sumerian || '';
+
+                if (r.matchedReadings.length > 0) {
+                    const m = r.matchedReadings[0];
+                    displayCunei = m.cuneiform;
+                    displaySum = m.sumerian;
+                }
+
+                const akkNameOnly = r.entry.nameAkk.split('(')[0].trim();
+
+                return `
+                    <div class="sr-item" data-id="${r.entry.id}" data-cat="${r.catKey}" style="animation-delay: ${index * 0.05}s; opacity: 0;">
+                        <div class="sr-part sr-part-right">
+                            <span class="sr-name">${r.entry.nameAr}</span>
+                        </div>
+                        <div class="sr-part sr-part-center">
+                            <span class="sr-akk">${akkNameOnly}</span>
+                        </div>
+                        <div class="sr-part sr-part-left">
+                            <span class="sr-cuneiform">${displayCunei}</span>
+                            <span class="sr-match-sum">${displaySum}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Click → expand detail
+            area.querySelectorAll('.sr-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const id = item.dataset.id;
+                    const cat = item.dataset.cat;
+                    showDetail(id, cat);
+                });
+            });
+        }
+
+        /* ===================================================
+           ENTRY DETAIL
+           =================================================== */
+        function showDetail(entryId, catKey) {
+            const catData = DICTIONARY_DATA[catKey];
+            if (!catData) return;
+            const entry = catData.entries.find(e => e.id === entryId);
+            if (!entry) return;
+
+            document.getElementById('searchResults').style.display = 'none';
+            const detail = document.getElementById('entryDetail');
+            detail.style.display = 'block';
+
+            const catLabel = currentLang === 'ar' ? catData.nameAr : catData.nameEn;
+            const isCity = catKey === 'cities';
+
+            let mapHTML = '';
+            if (isCity && entry.coordinates) {
+                mapHTML = `
+                    <div style="margin-top: 24px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);">
+                        <div id="cityDetailMap" style="height: 200px; width: 100%; position: relative; z-index: 10;"></div>
+                    </div>
+                `;
+            }
+
+            const akkNameOnly = entry.nameAkk.split('(')[0].trim();
+            const readingsHTML = entry.sumerianReadings.map(r => `
+                <div class="ed-row">
+                    <span class="ed-labat" style="font-family:'Cardo', serif; color:var(--red);">
+                        <span style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="عرض صورة المصدر">ص ${r.labat}</span> و ت ${r.labat}
+                    </span>
+                    <div class="ed-row-left">
+                        <span class="ed-cunei">${r.cuneiform}</span>
+                        <span class="ed-sum">${r.sumerian}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            detail.innerHTML = `
+                <div class="ed-head">
+                    <div class="ed-name-ar">${entry.nameAr}</div>
+                    <div class="ed-name-akk">${akkNameOnly}</div>
+                    <div class="ed-cat">${catLabel}</div>
+                </div>
+                <div class="ed-readings">
+                    ${readingsHTML}
+                </div>
+                ${mapHTML}
+            `;
+
+            window.scrollTo(0, 0);
+
+            if (isCity && entry.coordinates) {
+                setTimeout(() => {
+                    const mapEl = document.getElementById('cityDetailMap');
+                    if (mapEl) {
+                        const map = L.map(mapEl).setView([entry.coordinates.lat, entry.coordinates.lng], 7);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                        const icon = L.divIcon({
+                            className: '',
+                            html: '<div style="width:14px;height:14px;background:#c9a227;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>',
+                            iconSize: [14, 14],
+                            iconAnchor: [7, 7]
+                        });
+                        L.marker([entry.coordinates.lat, entry.coordinates.lng], { icon }).addTo(map)
+                            .bindPopup('<b>'+entry.nameAr+'</b>').openPopup();
+                    }
+                }, 100);
+            }
+        }
+
+        function openImgModal(labatNum) {
+            const modal = document.getElementById('imgModal');
+            const img = document.getElementById('sourceImg');
+            img.src = 'images/' + labatNum + '.jpg';
+            modal.style.display = 'flex';
+        }
+
+        function closeImgModal() {
+            document.getElementById('imgModal').style.display = 'none';
+            document.getElementById('sourceImg').src = '';
+        }
+
+        /* ===================================================
+           FULL MAP (Main Page Map)
+           =================================================== */
+        function initFullMap() {
+            if (mainMapInstance) {
+                mainMapInstance.invalidateSize();
+                return;
+            }
+
+            const el = document.getElementById('mainMap');
+            mainMapInstance = L.map(el).setView([32.5, 44.5], 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 14
+            }).addTo(mainMapInstance);
+
+            const icon = L.divIcon({
+                className: '',
+                html: '<div style="width:14px;height:14px;background:#c9a227;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>',
+                iconSize: [14, 14],
+                iconAnchor: [7, 7]
+            });
+
+            MAP_CITIES.forEach(city => {
+                L.marker([city.coordinates.lat, city.coordinates.lng], { icon })
+                    .addTo(mainMapInstance)
+                    .bindPopup(`
+                        <div class="popup-name">${city.nameAr}</div>
+                        <div class="popup-akk">${city.nameAkk}</div>
+                        <div class="popup-cuneiform" style="font-family:var(--cuneiform-font); font-size:1.4rem; color:var(--accent); direction:ltr; margin-top:4px;">${city.cuneiform}</div>
+                    `);
+            });
+        }
+    </script>
+</body>
+</html>
