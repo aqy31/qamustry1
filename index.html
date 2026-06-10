@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <!-- تثبيت الموقع بالكامل ومنع المستخدم من تقريب الصفحة نهائياً -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>قاموس لابات </title>
     <meta name="description" content="معجم أكاديمي للمفردات الأكدية والسومرية — قاموس لابات">
@@ -34,20 +35,17 @@
         html[lang="en"] .lang-ar { display: none !important; }
         html[lang="ar"] .lang-en { display: none !important; }
 
-        /* تعديلات الاتجاه للغة الإنجليزية */
+        /* تعديلات الاتجاه للغة الإنجليزية (مع الحفاظ على نسق القاموس كما هو بالعربي) */
         html[lang="en"] .sr-item { direction: ltr; }
         html[lang="en"] .sr-part-right { justify-content: flex-start; }
         html[lang="en"] .cat-btn { flex-direction: row-reverse; text-align: left; }
-        html[lang="en"] .ed-row { direction: ltr; }
-        html[lang="en"] .ed-row::before { right: auto; left: -24px; }
-        html[lang="en"] .ed-readings::before { right: auto; left: 8px; }
-        html[lang="en"] .ed-readings { padding-right: 0; padding-left: 28px; }
         html[lang="en"] .ed-head, html[lang="en"] .ed-name-akk { text-align: left; direction: ltr; }
         html[lang="en"] .search-bar-row input { direction: ltr; }
         html[lang="en"] .ccs-selected { flex-direction: row-reverse; }
         html[lang="en"] .ccs-item { text-align: left; }
         html[lang="en"] .leaflet-popup-content { direction: ltr; text-align: left; }
-        html[lang="en"] .ed-labat { text-align: left; }
+        html[lang="en"] .about-sources-list { padding-right: 0; padding-left: 20px; }
+        html[lang="en"] .about-sources-list li { direction: ltr; text-align: left; }
 
         /* --- CSS Variables --- */
         :root {
@@ -256,7 +254,21 @@
         }
         .size-btn:hover { border-color: var(--accent); color: var(--accent); }
         #fontSizeLabel { font-size: 0.85rem; color: var(--text-secondary); min-width: 24px; text-align: center; }
-        
+
+        .setting-select {
+            width: 100%;
+            padding: 9px 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+            direction: ltr;
+        }
+        .setting-select:focus { border-color: var(--accent); }
         .setting-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
 
         /* ===== HOME PAGE ===== */
@@ -586,7 +598,7 @@
             position: relative;
             direction: rtl;
         }
-        /* السومري فوق والمسماري تحت من جهة اليسار */
+        /* السومري فوق والمسماري تحت من جهة اليسار للغتين */
         .ed-row-left {
             display: flex;
             flex-direction: column;
@@ -632,6 +644,13 @@
             line-height: 1;
             letter-spacing: 0.04em;
             word-break: break-all;
+        }
+
+        /* تنسيق الموبايل الأصلي المتناسق للعلامات */
+        @media (max-width: 600px) {
+            .ed-row { gap: 10px; flex-wrap: wrap; }
+            .ed-sum { min-width: auto; }
+            .ed-cunei { font-size: 1.8rem; }
         }
 
         /* --- Map Page & Elements --- */
@@ -706,12 +725,10 @@
             padding-right: 20px;
         }
         .about-sources-list li {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Amiri', 'Inter', sans-serif;
             font-size: 0.95rem;
             color: var(--text-secondary);
             line-height: 2;
-            direction: ltr;
-            text-align: left;
         }
 
         @media (max-width: 600px) {
