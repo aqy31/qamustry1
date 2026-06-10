@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- تثبيت الموقع بالكامل ومنع المستخدم من تقريب الصفحة نهائياً -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>قاموس لابات </title>
     <meta name="description" content="معجم أكاديمي للمفردات الأكدية والسومرية — قاموس لابات">
@@ -21,8 +20,15 @@
         @font-face { font-family: 'Sumerian'; src: url('Sumerian.ttf'); }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { overflow-x: hidden; }
+        html, body { overflow-x: hidden; touch-action: manipulation; /* يمنع تقريب الشاشة بالدبل كليك */ }
         html { scroll-behavior: smooth; font-size: 16px; }
+        
+        /* منع التقريب والنسخ على الأزرار */
+        button, input, select, .icon-btn, .toggle-btn, .size-btn, .cat-btn, .ccs-selected, .ccs-item {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
         /* --- CSS Variables --- */
         :root {
@@ -599,6 +605,8 @@
             background: var(--line-color);
             border-radius: 2px;
         }
+        
+        /* تعديل التنسيق لضمان عدم التداخل أوتوماتيكياً */
         .ed-row {
             display: flex;
             align-items: center;
@@ -607,14 +615,18 @@
             padding: 18px 0;
             position: relative;
             direction: rtl;
-            flex-wrap: wrap;
         }
         .ed-row-left {
             display: flex;
             align-items: center;
+            justify-content: flex-end; /* لضمان محاذاة النص السومري بشكل سليم */
             gap: 16px;
             direction: ltr;
+            flex: 1; /* يأخذ باقي المساحة المتاحة */
+            flex-wrap: wrap; /* يسمح بالتنسيق التلقائي والتنزيل للسطر في حال كان النص طويلاً */
+            min-width: 0;
         }
+        
         .ed-row::before {
             content: '';
             position: absolute;
@@ -643,6 +655,7 @@
             color: var(--red);
             min-width: 36px;
             text-align: right;
+            flex-shrink: 0; /* يمنع تقلص كلمة العلامة */
         }
         .ed-cunei {
             font-family: var(--cuneiform-font);
@@ -651,6 +664,19 @@
             line-height: 1;
             letter-spacing: 0.04em;
             word-break: break-all;
+        }
+        
+        /* تعديل للموبايل لجعل التنسيق طولي إذا لزم الأمر لمنع التداخل تماماً */
+        @media (max-width: 600px) {
+            .ed-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .ed-row-left {
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
 
         /* --- Map Page & Elements --- */
@@ -733,16 +759,6 @@
             text-align: left;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .search-bar-row { flex-direction: column; gap: 8px; }
-            .ed-row { gap: 10px; flex-wrap: wrap; }
-            .ed-sum { min-width: auto; }
-            .ed-cunei { font-size: 1.8rem; }
-            .settings-panel { width: 280px; }
-            .nav-right { gap: 4px; }
-            .nav-text-btn { font-size: 0.95rem; padding: 6px 8px; }
-        }
     </style>
 </head>
 <body>
@@ -865,13 +881,10 @@
         <div id="entryDetail" class="entry-detail" style="display:none;"></div>
     </div>
 
-    <!-- نافذة العرض: خلفية شبه شفافة لرؤية معالم الموقع خلفها بشكل خفيف -->
     <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.6); overflow:hidden; touch-action:none;">
         <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; z-index:903; display:flex; justify-content:center; align-items:center; padding-bottom: 5px;">&times;</button>
         
-        <!-- إطار الاستوديو الثابت والمستقر بالكامل بداخل الشاشة -->
         <div style="width:85vw; height:70vh; max-width:600px; max-height:550px; border: 12px solid #fff; border-radius: 16px; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; position:relative; display:flex; justify-content:center; align-items:center; z-index:902;">
-            <!-- الصورة حرة الحركة والتقريب فقط داخل حدود الإطار الأبيض الثابت -->
             <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:100%; object-fit:contain; user-select: none; -webkit-user-drag: none; transform-origin: center center;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل بصيغة png في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
         </div>
     </div>
@@ -1919,10 +1932,12 @@
             document.getElementById('sourceImg').src = '';
         }
 
-        // إعدادات التقريب والسحب الحر بداخل حدود الإطار الأبيض الثابت على مكان الماوس فقط
+        // إعدادات التقريب والسحب الحر بداخل حدود الإطار الأبيض الثابت على مكان الماوس أو اللمس فقط
         document.addEventListener('DOMContentLoaded', () => {
             const sourceImg = document.getElementById('sourceImg');
             if(sourceImg) {
+                
+                // --- إعدادات الماوس للكمبيوتر ---
                 sourceImg.addEventListener('mousedown', function (e) {
                     e.preventDefault();
                     imgStart = { x: e.clientX - imgPointX, y: e.clientY - imgPointY };
@@ -1951,37 +1966,74 @@
 
                 sourceImg.addEventListener('wheel', function (e) {
                     e.preventDefault();
-                    
                     const mouseX = e.clientX;
                     const mouseY = e.clientY;
-
                     const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
                     const zoomSpeed = 1.15;
                     const oldScale = imgScale;
                     
-                    if (delta > 0) {
-                        imgScale *= zoomSpeed; // تقريب
-                    } else {
-                        imgScale /= zoomSpeed; // تبعيد
-                    }
+                    if (delta > 0) imgScale *= zoomSpeed;
+                    else imgScale /= zoomSpeed;
                     
-                    // منع تصغير الصورة بشكل مبالغ فيه أو تكبيرها لدرجة تختفي
                     if (imgScale < 0.5) imgScale = 0.5;
                     if (imgScale > 15) imgScale = 15;
 
                     const rect = sourceImg.getBoundingClientRect();
-                    
-                    // حساب مسافة الماوس عن مركز الصورة الحالي بالضبط
                     const offsetX = mouseX - (rect.left + rect.width / 2);
                     const offsetY = mouseY - (rect.top + rect.height / 2);
-
-                    // تعويض فرق التكبير بترجمة عكسية للحفاظ على نقطة الماوس ثابتة كمركز للتقريب
                     const ratio = 1 - (imgScale / oldScale);
                     
                     imgPointX += offsetX * ratio;
                     imgPointY += offsetY * ratio;
-
                     sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+                });
+
+                // --- إعدادات اللمس (Touch) للموبايل للتقريب بأصبعين والسحب ---
+                let initialDistance = 0;
+                let initialScale = 1;
+
+                sourceImg.addEventListener('touchstart', function(e) {
+                    if (e.touches.length === 1) {
+                        imgStart = { x: e.touches[0].clientX - imgPointX, y: e.touches[0].clientY - imgPointY };
+                        imgPanning = true;
+                        sourceImg.style.transition = 'none'; 
+                    } else if (e.touches.length === 2) {
+                        imgPanning = false;
+                        initialDistance = Math.hypot(
+                            e.touches[0].clientX - e.touches[1].clientX,
+                            e.touches[0].clientY - e.touches[1].clientY
+                        );
+                        initialScale = imgScale;
+                        sourceImg.style.transition = 'none'; 
+                    }
+                }, {passive: false});
+
+                sourceImg.addEventListener('touchmove', function(e) {
+                    e.preventDefault(); // يمنع الشاشة من النزول عند السحب على الصورة
+                    if (e.touches.length === 1 && imgPanning) {
+                        imgPointX = e.touches[0].clientX - imgStart.x;
+                        imgPointY = e.touches[0].clientY - imgStart.y;
+                        sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+                    } else if (e.touches.length === 2) {
+                        let currentDistance = Math.hypot(
+                            e.touches[0].clientX - e.touches[1].clientX,
+                            e.touches[0].clientY - e.touches[1].clientY
+                        );
+                        imgScale = initialScale * (currentDistance / initialDistance);
+                        if (imgScale < 0.5) imgScale = 0.5;
+                        if (imgScale > 15) imgScale = 15;
+                        sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+                    }
+                }, {passive: false});
+
+                sourceImg.addEventListener('touchend', function(e) {
+                    if (e.touches.length < 2) {
+                        initialDistance = 0;
+                    }
+                    if (e.touches.length === 0) {
+                        imgPanning = false;
+                        sourceImg.style.transition = 'transform 0.1s ease';
+                    }
                 });
             }
         });
@@ -2010,13 +2062,24 @@
             });
 
             MAP_CITIES.forEach(city => {
-                L.marker([city.coordinates.lat, city.coordinates.lng], { icon })
+                const marker = L.marker([city.coordinates.lat, city.coordinates.lng], { icon })
                     .addTo(mainMapInstance)
                     .bindPopup(`
                         <div class="popup-name">${city.nameAr}</div>
                         <div class="popup-akk">${city.nameAkk}</div>
                         <div class="popup-cuneiform" style="font-family:var(--cuneiform-font); font-size:1.4rem; color:var(--accent); direction:ltr; margin-top:4px;">${city.cuneiform}</div>
+                        <div style="margin-top:6px; font-family:'Inter', sans-serif; font-size:0.8rem; color:#777; direction:ltr; text-align:right;">
+                            الإحداثيات: ${city.coordinates.lat}, ${city.coordinates.lng} 📍
+                        </div>
                     `);
+                
+                // إضافة حركة التقريب عند الضغط على النقطة
+                marker.on('click', function(e) {
+                    mainMapInstance.flyTo(e.latlng, 13, {
+                        animate: true,
+                        duration: 1.2
+                    });
+                });
             });
         }
     </script>
