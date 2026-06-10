@@ -434,8 +434,9 @@
             padding: 0 20px;
         }
         .sr-item {
-            height: 80px;
-            padding: 0 24px;
+            min-height: 80px; /* لضمان تمدد المربع بحال كان النص طويلا */
+            height: auto; 
+            padding: 12px 24px;
             border: 1px solid var(--border-light);
             cursor: pointer;
             border-radius: 12px;
@@ -482,9 +483,8 @@
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* السماح بالتفاف النص وعدم اختفائه */
+            word-break: break-word;
             display: block;
         }
         .sr-akk {
@@ -493,21 +493,23 @@
             color: var(--text-muted);
             font-style: italic;
             direction: ltr;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* السماح بالتفاف النص وعدم اختفائه */
+            word-break: break-word;
             display: block;
         }
 
         .sumerian-badge {
             display: flex;
+            flex-direction: column; /* ترتيب عمودي ذكي لتقليل المساحة العرضية */
+            justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             background: var(--accent-light);
-            padding: 6px 12px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid var(--border-light);
             max-width: 100%;
+            text-align: center;
         }
 
         .badge-sum {
@@ -536,14 +538,14 @@
         }
 
         @media (max-width: 600px) {
-            .sr-item { height: 60px; padding: 0 10px; gap: 8px; }
-            .sr-name { font-size: 1.1rem; }
-            .sr-akk { font-size: 1rem; }
-            .badge-cunei { font-size: 1.2rem; }
-            .badge-sum { font-size: 0.8rem; }
-            .badge-labat { font-size: 0.7rem; }
-            .sr-part-left { gap: 6px; }
-            .sumerian-badge { padding: 4px 8px; gap: 6px; }
+            .sr-item { min-height: 70px; padding: 10px; gap: 8px; }
+            .sr-name { font-size: 1.1rem; line-height: 1.4; }
+            .sr-akk { font-size: 1rem; line-height: 1.4; }
+            .badge-cunei { font-size: 1.6rem; line-height: 1; }
+            .badge-sum { font-size: 0.85rem; }
+            .badge-labat { font-size: 0.75rem; }
+            .sr-part-left { gap: 4px; }
+            .sumerian-badge { padding: 6px 10px; gap: 4px; }
         }
 
         /* --- Expanded Entry Detail --- */
