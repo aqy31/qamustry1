@@ -35,7 +35,7 @@
         html[lang="en"] .lang-ar { display: none !important; }
         html[lang="ar"] .lang-en { display: none !important; }
 
-        /* تعديلات الاتجاه للغة الإنجليزية (مع الحفاظ على نسق القاموس كما هو بالعربي) */
+        /* تعديلات الاتجاه للغة الإنجليزية (تعديل كامل للنصوص اليسرى) */
         html[lang="en"] .sr-item { direction: ltr; }
         html[lang="en"] .sr-part-right { justify-content: flex-start; }
         html[lang="en"] .cat-btn { flex-direction: row-reverse; text-align: left; }
@@ -46,6 +46,10 @@
         html[lang="en"] .leaflet-popup-content { direction: ltr; text-align: left; }
         html[lang="en"] .about-sources-list { padding-right: 0; padding-left: 20px; }
         html[lang="en"] .about-sources-list li { direction: ltr; text-align: left; }
+        html[lang="en"] .about-content { direction: ltr; text-align: left; }
+        html[lang="en"] .about-content h2, 
+        html[lang="en"] .about-content h3, 
+        html[lang="en"] .about-content p { direction: ltr; text-align: left; }
 
         /* --- CSS Variables --- */
         :root {
@@ -1517,17 +1521,29 @@
            =================================================== */
         function initScrollHide() {
             let lastScrollY = window.scrollY;
+            let isSearchFocused = false;
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('focus', () => {
+                    isSearchFocused = true;
+                    document.getElementById('topNav').style.transform = 'translateY(0)';
+                    document.querySelector('.search-bar-row').style.transform = 'translateY(0)';
+                });
+                searchInput.addEventListener('blur', () => {
+                    isSearchFocused = false;
+                });
+            }
+
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 const topNav = document.getElementById('topNav');
                 const searchBar = document.querySelector('.search-bar-row');
                 
-                // نخفي الشريط إذا نزلنا أكثر من 80 بكسل
-                if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                if (currentScrollY > lastScrollY && currentScrollY > 80 && !isSearchFocused) {
                     topNav.style.transform = 'translateY(-100%)';
                     if (searchBar) searchBar.style.transform = 'translateY(-150%)';
                 } else {
-                    // نظهر الشريط مجرد ما نصعد لفوق
                     topNav.style.transform = 'translateY(0)';
                     if (searchBar) searchBar.style.transform = 'translateY(0)';
                 }
@@ -1549,11 +1565,17 @@
                 document.getElementById(btnId).classList.add('active');
             }
 
+            function closeSidePanel() {
+                document.getElementById('settingsPanel').classList.remove('open');
+                document.getElementById('settingsOverlay').classList.remove('open');
+            }
+
             navHome.addEventListener('click', () => {
                 setActiveNav('navHome');
                 showPage('homePage');
                 backBtn.style.display = 'none';
                 document.getElementById('searchInput').value = ''; 
+                closeSidePanel();
             });
 
             navMap.addEventListener('click', () => {
@@ -1561,12 +1583,14 @@
                 showPage('mapPage');
                 backBtn.style.display = 'none';
                 setTimeout(initFullMap, 150);
+                closeSidePanel();
             });
 
             navAbout.addEventListener('click', () => {
                 setActiveNav('navAbout');
                 showPage('aboutPage');
                 backBtn.style.display = 'none';
+                closeSidePanel();
             });
 
             backBtn.addEventListener('click', () => {
