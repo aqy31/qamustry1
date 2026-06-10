@@ -15,20 +15,39 @@
           قاموس لابات 
            =================================================== */
 
-        @font-face { font-family: 'Assyrian'; src: url('Assyrian.ttf'); }
-        @font-face { font-family: 'Babylonian'; src: url('Babylonian.ttf'); }
-        @font-face { font-family: 'Sumerian'; src: url('Sumerian.ttf'); }
+        /* لتسريع تحميل الخطوط وجعل الموقع يفتح فوراً */
+        @font-face { font-family: 'Assyrian'; src: url('Assyrian.ttf'); font-display: swap; }
+        @font-face { font-family: 'Babylonian'; src: url('Babylonian.ttf'); font-display: swap; }
+        @font-face { font-family: 'Sumerian'; src: url('Sumerian.ttf'); font-display: swap; }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { overflow-x: hidden; touch-action: manipulation; /* يمنع تقريب الشاشة بالدبل كليك */ }
+        html, body { overflow-x: hidden; touch-action: manipulation; }
         html { scroll-behavior: smooth; font-size: 16px; }
         
-        /* منع التقريب والنسخ على الأزرار */
         button, input, select, .icon-btn, .toggle-btn, .size-btn, .cat-btn, .ccs-selected, .ccs-item {
             touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
         }
+
+        /* --- نظام إخفاء اللغات المتبادل --- */
+        html[lang="en"] .lang-ar { display: none !important; }
+        html[lang="ar"] .lang-en { display: none !important; }
+
+        /* تعديلات الاتجاه للغة الإنجليزية */
+        html[lang="en"] .sr-item { direction: ltr; }
+        html[lang="en"] .sr-part-right { justify-content: flex-start; }
+        html[lang="en"] .cat-btn { flex-direction: row-reverse; text-align: left; }
+        html[lang="en"] .ed-row { direction: ltr; }
+        html[lang="en"] .ed-row::before { right: auto; left: -24px; }
+        html[lang="en"] .ed-readings::before { right: auto; left: 8px; }
+        html[lang="en"] .ed-readings { padding-right: 0; padding-left: 28px; }
+        html[lang="en"] .ed-head, html[lang="en"] .ed-name-akk { text-align: left; direction: ltr; }
+        html[lang="en"] .search-bar-row input { direction: ltr; }
+        html[lang="en"] .ccs-selected { flex-direction: row-reverse; }
+        html[lang="en"] .ccs-item { text-align: left; }
+        html[lang="en"] .leaflet-popup-content { direction: ltr; text-align: left; }
+        html[lang="en"] .ed-labat { text-align: left; }
 
         /* --- CSS Variables --- */
         :root {
@@ -49,7 +68,6 @@
             --cuneiform-font: 'Sumerian', serif;
         }
 
-        /* Dark theme */
         body.dark {
             --bg: #15151a;
             --bg-card: #202025;
@@ -77,12 +95,11 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* ===== Pages ===== */
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.25s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ===== TOP NAV ===== */
+        /* ===== TOP NAV & SEARCH BAR ANIMATION ===== */
         #topNav {
             display: flex;
             align-items: center;
@@ -93,17 +110,38 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.3, 0, 0.2, 1), background 0.3s, color 0.3s;
         }
 
-        .nav-right {
+        .search-bar-row {
             display: flex;
-            gap: 12px;
+            gap: 8px;
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 16px 20px 24px;
+            position: sticky;
+            top: 55px;
+            z-index: 90;
+            transition: transform 0.3s cubic-bezier(0.3, 0, 0.2, 1), margin-top 0.4s ease, box-shadow 0.2s ease;
         }
 
-        .nav-left {
-            display: flex;
-            gap: 6px;
+        .search-bar-row::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            bottom: 0;
+            left: -50vw;
+            right: -50vw;
+            background: var(--bg);
+            z-index: -1;
+            border-bottom: 1px solid var(--border-light);
         }
+        .search-container.centered .search-bar-row {
+            margin-top: 30vh;
+        }
+
+        .nav-right { display: flex; gap: 12px; }
+        .nav-left { display: flex; gap: 6px; }
 
         .nav-text-btn {
             background: none;
@@ -117,11 +155,7 @@
             border-radius: 6px;
             transition: all 0.15s;
         }
-        .nav-text-btn:hover {
-            color: var(--accent);
-            background: var(--accent-light);
-        }
-        .nav-text-btn.active {
+        .nav-text-btn:hover, .nav-text-btn.active {
             color: var(--accent);
             background: var(--accent-light);
         }
@@ -222,21 +256,7 @@
         }
         .size-btn:hover { border-color: var(--accent); color: var(--accent); }
         #fontSizeLabel { font-size: 0.85rem; color: var(--text-secondary); min-width: 24px; text-align: center; }
-
-        .setting-select {
-            width: 100%;
-            padding: 9px 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg);
-            color: var(--text);
-            cursor: pointer;
-            outline: none;
-            direction: ltr;
-        }
-        .setting-select:focus { border-color: var(--accent); }
+        
         .setting-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
 
         /* ===== HOME PAGE ===== */
@@ -292,12 +312,6 @@
             font-weight: 700;
             color: var(--text);
         }
-        .cat-label-en {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            letter-spacing: 0.03em;
-        }
 
         /* --- Search Page Wrap --- */
         .search-container {
@@ -306,31 +320,6 @@
         }
 
         /* ===== SEARCH PAGE ===== */
-        .search-bar-row {
-            display: flex;
-            gap: 8px;
-            max-width: 620px;
-            margin: 0 auto;
-            padding: 16px 20px 24px;
-            transition: margin-top 0.4s ease, box-shadow 0.2s ease;
-            position: sticky;
-            top: 55px;
-            z-index: 90;
-        }
-        .search-bar-row::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            bottom: 0;
-            left: -50vw;
-            right: -50vw;
-            background: var(--bg);
-            z-index: -1;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .search-container.centered .search-bar-row {
-            margin-top: 30vh;
-        }
         .search-bar-row input {
             flex: 1;
             padding: 12px 16px;
@@ -368,9 +357,7 @@
             transition: all 0.2s;
             height: 100%;
         }
-        .ccs-selected:hover {
-            border-color: var(--accent);
-        }
+        .ccs-selected:hover { border-color: var(--accent); }
         .ccs-selected.open {
             border-color: var(--accent);
             border-bottom-left-radius: 0;
@@ -381,9 +368,7 @@
             height: 18px;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .ccs-selected.open .ccs-arrow {
-            transform: rotate(180deg);
-        }
+        .ccs-selected.open .ccs-arrow { transform: rotate(180deg); }
         .ccs-items {
             position: absolute;
             top: 100%;
@@ -402,9 +387,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
-        body.dark .ccs-items {
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-        }
+        body.dark .ccs-items { box-shadow: 0 8px 16px rgba(0,0,0,0.4); }
         .ccs-items.open {
             opacity: 1;
             visibility: visible;
@@ -420,9 +403,7 @@
             border-bottom: 1px solid var(--border-light);
             text-align: right;
         }
-        .ccs-item:last-child {
-            border-bottom: none;
-        }
+        .ccs-item:last-child { border-bottom: none; }
         .ccs-item:hover, .ccs-item.active {
             background: var(--accent-light);
             color: var(--accent);
@@ -464,14 +445,12 @@
             align-items: center;
             min-width: 0;
         }
-
         .sr-part-center {
             display: flex;
             justify-content: center;
             align-items: center;
             min-width: 0;
         }
-
         .sr-part-left {
             display: flex;
             flex-direction: column;
@@ -492,7 +471,6 @@
             text-overflow: ellipsis;
             display: block;
         }
-
         .sr-akk {
             font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
             font-size: 1.2rem;
@@ -524,7 +502,6 @@
             text-transform: uppercase;
             white-space: nowrap;
         }
-
         .badge-cunei {
             font-family: var(--cuneiform-font);
             font-size: 1.4rem;
@@ -533,7 +510,6 @@
             flex-shrink: 0;
             white-space: nowrap;
         }
-
         .badge-labat {
             font-family: 'Inter', sans-serif;
             font-size: 0.8rem;
@@ -544,11 +520,7 @@
         }
 
         @media (max-width: 600px) {
-            .sr-item {
-                height: 60px;
-                padding: 0 10px;
-                gap: 8px;
-            }
+            .sr-item { height: 60px; padding: 0 10px; gap: 8px; }
             .sr-name { font-size: 1.1rem; }
             .sr-akk { font-size: 1rem; }
             .badge-cunei { font-size: 1.2rem; }
@@ -605,8 +577,6 @@
             background: var(--line-color);
             border-radius: 2px;
         }
-        
-        /* تعديل التنسيق لضمان عدم التداخل أوتوماتيكياً */
         .ed-row {
             display: flex;
             align-items: center;
@@ -616,17 +586,16 @@
             position: relative;
             direction: rtl;
         }
+        /* السومري فوق والمسماري تحت من جهة اليسار */
         .ed-row-left {
             display: flex;
-            align-items: center;
-            justify-content: flex-end; /* لضمان محاذاة النص السومري بشكل سليم */
-            gap: 16px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
             direction: ltr;
-            flex: 1; /* يأخذ باقي المساحة المتاحة */
-            flex-wrap: wrap; /* يسمح بالتنسيق التلقائي والتنزيل للسطر في حال كان النص طويلاً */
+            flex: 1;
             min-width: 0;
         }
-        
         .ed-row::before {
             content: '';
             position: absolute;
@@ -642,10 +611,9 @@
         }
         .ed-sum {
             font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text);
-            min-width: 160px;
             letter-spacing: 0.02em;
         }
         .ed-labat {
@@ -655,7 +623,7 @@
             color: var(--red);
             min-width: 36px;
             text-align: right;
-            flex-shrink: 0; /* يمنع تقلص كلمة العلامة */
+            flex-shrink: 0;
         }
         .ed-cunei {
             font-family: var(--cuneiform-font);
@@ -664,19 +632,6 @@
             line-height: 1;
             letter-spacing: 0.04em;
             word-break: break-all;
-        }
-        
-        /* تعديل للموبايل لجعل التنسيق طولي إذا لزم الأمر لمنع التداخل تماماً */
-        @media (max-width: 600px) {
-            .ed-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            .ed-row-left {
-                width: 100%;
-                justify-content: flex-end;
-            }
         }
 
         /* --- Map Page & Elements --- */
@@ -759,6 +714,12 @@
             text-align: left;
         }
 
+        @media (max-width: 600px) {
+            .search-bar-row { flex-direction: column; gap: 8px; }
+            .settings-panel { width: 280px; }
+            .nav-right { gap: 4px; }
+            .nav-text-btn { font-size: 0.95rem; padding: 6px 8px; }
+        }
     </style>
 </head>
 <body>
@@ -815,14 +776,21 @@
             </div>
         </div>
 
+        <!-- قائمة الخطوط المنبثقة الأنيقة الجديدة -->
         <div class="setting-group">
             <div class="setting-label" data-i18n="cuneiform_font">الخط المسماري</div>
-            <select id="cuneiformFontSelect" class="setting-select">
-                <option value="Sumerian">سومرية (Sumerian)</option>
-                <option value="Babylonian">بابلية (Babylonian)</option>
-                <option value="Assyrian">آشورية (Assyrian)</option>
-            </select>
-            <div class="setting-hint" data-i18n="font_hint">اختر نوع الخط المسماري = </div>
+            <div class="custom-cat-switch" id="customFontSwitch" style="margin-top: 8px;">
+                <div class="ccs-selected" id="fontSelected">
+                    <span id="fontSelectedText" data-i18n="font_sumerian">سومرية (Sumerian)</span>
+                    <svg class="ccs-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="ccs-items" id="fontItems">
+                    <div class="ccs-item active" data-value="Sumerian" data-i18n="font_sumerian">سومرية (Sumerian)</div>
+                    <div class="ccs-item" data-value="Babylonian" data-i18n="font_babylonian">بابلية (Babylonian)</div>
+                    <div class="ccs-item" data-value="Assyrian" data-i18n="font_assyrian">آشورية (Assyrian)</div>
+                </div>
+            </div>
+            <div class="setting-hint" data-i18n="font_hint">اختر نوع الخط المسماري لتغيير عرض العلامات</div>
         </div>
     </div>
 
@@ -835,23 +803,23 @@
         <div class="cats-list">
             <button class="cat-btn" data-cat="all">
                 <span class="cat-label" data-i18n="cat_all">القاموس الشامل</span>
-                <span class="cat-label-en">Complete Dictionary</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
             <button class="cat-btn" data-cat="cities">
                 <span class="cat-label" data-i18n="cat_cities">أسماء المدن والمواقع الجغرافية</span>
-                <span class="cat-label-en">Cities</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
             <button class="cat-btn" data-cat="gods">
                 <span class="cat-label" data-i18n="cat_gods">الآلهة والعفاريت</span>
-                <span class="cat-label-en">Gods</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
             <button class="cat-btn" data-cat="stars">
                 <span class="cat-label" data-i18n="cat_stars">النجوم والابراج والكواكب</span>
-                <span class="cat-label-en">Stars</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
             <button class="cat-btn" data-cat="planets">
                 <span class="cat-label" data-i18n="cat_planets">أسماء الاشهر الاشورية</span>
-                <span class="cat-label-en">Planets</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
         </div>
     </div>
@@ -881,10 +849,13 @@
         <div id="entryDetail" class="entry-detail" style="display:none;"></div>
     </div>
 
+    <!-- نافذة العرض: خلفية شبه شفافة لرؤية معالم الموقع خلفها بشكل خفيف -->
     <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.6); overflow:hidden; touch-action:none;">
         <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; z-index:903; display:flex; justify-content:center; align-items:center; padding-bottom: 5px;">&times;</button>
         
+        <!-- إطار الاستوديو الثابت والمستقر بالكامل بداخل الشاشة -->
         <div style="width:85vw; height:70vh; max-width:600px; max-height:550px; border: 12px solid #fff; border-radius: 16px; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; position:relative; display:flex; justify-content:center; align-items:center; z-index:902;">
+            <!-- الصورة حرة الحركة والتقريب فقط داخل حدود الإطار الأبيض الثابت -->
             <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:100%; object-fit:contain; user-select: none; -webkit-user-drag: none; transform-origin: center center;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل بصيغة png في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
         </div>
     </div>
@@ -905,7 +876,7 @@
             <p data-i18n="about_p2">يُعتبر هذا الموقع أداة مساعدة للباحثين والطلاب في علم الآثار والمسماريات للبحث السريع عن المفردات السومرية والأكدية مع استخراج أرقام العلامات مباشرة.</p>
             <h3 data-i18n="about_sources">المصادر الأساسية</h3>
             <ul class="about-sources-list">
-                <li>قاموس لابات</em></li>
+                <li data-i18n="about_source_1">قاموس لابات</li>
             </ul>
         </div>
     </div>
@@ -953,7 +924,7 @@
                             { sumerian: "ADAB", cuneiform: "𒀏", labat: "175²" , labatPage: "ت 381 " },
                         ],
                         coordinates: { lat: 36.3600, lng: 43.1530 },
-                        keywords: ["نينوى", "nineveh", "ninua", "نينا", "ninive"]
+                        keywords: ["أدب", "adab", "ud-nun", "مدينة أدب"]
                     }
                 ]
             },
@@ -1450,7 +1421,7 @@
         let fontSize = 16;
         let mainMapInstance = null;
 
-        // i18n translations
+        // الترجمة الشاملة لجميع محتويات الموقع
         const i18n = {
             ar: {
                 title: 'المعجم الأكاديمي للمسماريات',
@@ -1465,21 +1436,23 @@
                 night_mode: 'ليلي',
                 font_size: 'حجم الخط',
                 cuneiform_font: 'الخط المسماري',
-                font_hint: 'لاستخدام خطوط إضافية، أضف ملفات الخطوط إلى مجلد fonts',
+                font_sumerian: 'سومرية (Sumerian)',
+                font_babylonian: 'بابلية (Babylonian)',
+                font_assyrian: 'آشورية (Assyrian)',
+                font_hint: 'اختر نوع الخط المسماري لتغيير عرض العلامات',
                 search_placeholder: 'ابحث...',
                 cat_all: 'القاموس الشامل',
                 cat_cities: 'أسماء المدن والمواقع الجغرافية',
-                cat_gods: 'الآلهة',
-                cat_stars: 'النجوم',
-                cat_planets: 'الكواكب',
-                cat_months: 'الأشهر',
-                cat_demons: 'العفاريت',
+                cat_gods: 'الآلهة والعفاريت',
+                cat_stars: 'النجوم والابراج والكواكب',
+                cat_planets: 'أسماء الاشهر الاشورية',
                 no_results: 'لا توجد نتائج',
                 map_title: 'خريطة المدن القديمة',
                 about_title: 'التعريف الخاص بالموقع والمصادر',
                 about_p1: 'هذا المعجم الأكاديمي مبني على أساس الجزء الأخير من قاموس لابات (Manuel d\'épigraphie akkadienne) للعالم رينيه لابات، ويشمل المدن والآلهة والنجوم والكواكب والأشهر والعفاريت.',
                 about_p2: 'يُعتبر هذا الموقع أداة مساعدة للباحثين والطلاب في علم الآثار والمسماريات للبحث السريع عن المفردات السومرية والأكدية مع استخراج أرقام العلامات مباشرة.',
-                about_sources: 'المصادر الأساسية'
+                about_sources: 'المصادر الأساسية',
+                about_source_1: 'قاموس لابات'
             },
             en: {
                 title: 'Academic Cuneiform Lexicon',
@@ -1494,21 +1467,23 @@
                 night_mode: 'Night',
                 font_size: 'Font Size',
                 cuneiform_font: 'Cuneiform Font',
-                font_hint: 'To use additional fonts, add font files (.ttf/.otf) to the fonts folder',
+                font_sumerian: 'Sumerian',
+                font_babylonian: 'Babylonian',
+                font_assyrian: 'Assyrian',
+                font_hint: 'Choose Cuneiform Font type to change signs display',
                 search_placeholder: 'Search...',
                 cat_all: 'Complete Dictionary',
-                cat_cities: 'Cities',
-                cat_gods: 'Gods',
-                cat_stars: 'Stars',
-                cat_planets: 'Planets',
-                cat_months: 'Months',
-                cat_demons: 'Demons',
+                cat_cities: 'Cities and Geographical Locations',
+                cat_gods: 'Gods and Demons',
+                cat_stars: 'Stars and Constellations',
+                cat_planets: 'Assyrian Months',
                 no_results: 'No results found',
                 map_title: 'Ancient Cities Map',
                 about_title: 'About the Lexicon & Sources',
                 about_p1: 'This academic lexicon is based on the final section of René Labat\'s Manuel d\'épigraphie akkadienne, covering cities, gods, stars, planets, months, and demons.',
                 about_p2: 'This site serves as a tool for researchers and students in archaeology and Assyriology to quickly search for Sumerian and Akkadian vocabulary and directly extract sign numbers.',
-                about_sources: 'Primary Sources'
+                about_sources: 'Primary Sources',
+                about_source_1: 'Labat Dictionary'
             }
         };
 
@@ -1517,7 +1492,31 @@
             initNavigation();
             initCategories();
             initSearch();
+            initScrollHide();
         });
+
+        /* ===================================================
+           SCROLL HIDE/SHOW NAVBAR & SEARCH (تأثير الإخفاء عند النزول)
+           =================================================== */
+        function initScrollHide() {
+            let lastScrollY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+                const topNav = document.getElementById('topNav');
+                const searchBar = document.querySelector('.search-bar-row');
+                
+                // نخفي الشريط إذا نزلنا أكثر من 80 بكسل
+                if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                    topNav.style.transform = 'translateY(-100%)';
+                    if (searchBar) searchBar.style.transform = 'translateY(-150%)';
+                } else {
+                    // نظهر الشريط مجرد ما نصعد لفوق
+                    topNav.style.transform = 'translateY(0)';
+                    if (searchBar) searchBar.style.transform = 'translateY(0)';
+                }
+                lastScrollY = currentScrollY;
+            }, { passive: true });
+        }
 
         /* ===================================================
            NAVIGATION (Top Nav)
@@ -1537,7 +1536,7 @@
                 setActiveNav('navHome');
                 showPage('homePage');
                 backBtn.style.display = 'none';
-                document.getElementById('searchInput').value = ''; // clear search
+                document.getElementById('searchInput').value = ''; 
             });
 
             navMap.addEventListener('click', () => {
@@ -1553,13 +1552,11 @@
                 backBtn.style.display = 'none';
             });
 
-            // The back button is only shown inside search results when viewing detail
             backBtn.addEventListener('click', () => {
                 if (document.getElementById('entryDetail').style.display !== 'none') {
                     document.getElementById('entryDetail').style.display = 'none';
                     document.getElementById('searchResults').style.display = 'block';
                 } else {
-                    // If we are in search view, go back to home
                     setActiveNav('navHome');
                     showPage('homePage');
                     backBtn.style.display = 'none';
@@ -1574,7 +1571,7 @@
         }
 
         /* ===================================================
-           SETTINGS
+           SETTINGS & FONT DROPDOWN
            =================================================== */
         function initSettings() {
             const panel = document.getElementById('settingsPanel');
@@ -1631,9 +1628,36 @@
                 }
             });
 
-            // Cuneiform font
-            document.getElementById('cuneiformFontSelect').addEventListener('change', (e) => {
-                document.documentElement.style.setProperty('--cuneiform-font', `'${e.target.value}', serif`);
+            // القائمة المنبثقة للخط المسماري
+            const fontSelected = document.getElementById('fontSelected');
+            const fontItems = document.getElementById('fontItems');
+            const fontSelectedText = document.getElementById('fontSelectedText');
+
+            fontSelected.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fontSelected.classList.toggle('open');
+                fontItems.classList.toggle('open');
+            });
+
+            fontItems.querySelectorAll('.ccs-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const val = item.dataset.value;
+                    fontItems.querySelectorAll('.ccs-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    fontSelectedText.setAttribute('data-i18n', item.getAttribute('data-i18n'));
+                    fontSelectedText.textContent = item.textContent;
+                    
+                    document.documentElement.style.setProperty('--cuneiform-font', `'${val}', serif`);
+                    fontSelected.classList.remove('open');
+                    fontItems.classList.remove('open');
+                });
+            });
+
+            document.addEventListener('click', () => {
+                fontSelected.classList.remove('open');
+                fontItems.classList.remove('open');
             });
         }
 
@@ -1661,11 +1685,11 @@
            HOME CATEGORIES
            =================================================== */
         function updateCustomDropdownUI(val) {
-            document.querySelectorAll('.ccs-item').forEach(item => {
+            document.querySelectorAll('#ccsItems .ccs-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.value === val) {
                     item.classList.add('active');
-                    document.getElementById('ccsSelectedText').innerText = item.innerText;
+                    document.getElementById('ccsSelectedText').textContent = item.textContent;
                     document.getElementById('ccsSelectedText').setAttribute('data-i18n', item.getAttribute('data-i18n'));
                 }
             });
@@ -1704,7 +1728,7 @@
                 ccsItems.classList.toggle('open');
             });
 
-            document.querySelectorAll('.ccs-item').forEach(item => {
+            document.querySelectorAll('#ccsItems .ccs-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const val = item.dataset.value;
@@ -1751,7 +1775,6 @@
                 if (!catData) return;
 
                 catData.entries.forEach(entry => {
-                    // Find matched Sumerian readings
                     let matchedReadings = [];
                     entry.sumerianReadings.forEach(r => {
                         const sumMatch = r.sumerian.toLowerCase().includes(q);
@@ -1786,8 +1809,10 @@
             results.sort((a, b) => b.score - a.score);
 
             if (results.length === 0) {
-                const t = i18n[currentLang];
-                area.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--text-muted);font-family:Amiri,serif;">${t.no_results}</div>`;
+                area.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--text-muted);font-family:Amiri,serif;">
+                    <span class="lang-ar">${i18n.ar.no_results}</span>
+                    <span class="lang-en">${i18n.en.no_results}</span>
+                </div>`;
                 return;
             }
 
@@ -1805,11 +1830,13 @@
                 }
 
                 const akkNameOnly = r.entry.nameAkk.split('(')[0].trim();
+                const nameEn = r.entry.id.charAt(0).toUpperCase() + r.entry.id.slice(1);
 
                 return `
                     <div class="sr-item" data-id="${r.entry.id}" data-cat="${r.catKey}">
                         <div class="sr-part-right">
-                            <span class="sr-name">${r.entry.nameAr}</span>
+                            <span class="sr-name lang-ar">${r.entry.nameAr}</span>
+                            <span class="sr-name lang-en">${nameEn}</span>
                         </div>
                         <div class="sr-part-center">
                             <span class="sr-akk">${akkNameOnly}</span>
@@ -1825,7 +1852,6 @@
                 `;
             }).join('');
 
-            // Click → expand detail
             area.querySelectorAll('.sr-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const id = item.dataset.id;
@@ -1848,8 +1874,8 @@
             const detail = document.getElementById('entryDetail');
             detail.style.display = 'block';
 
-            const catLabel = currentLang === 'ar' ? catData.nameAr : catData.nameEn;
             const isCity = catKey === 'cities';
+            const nameEn = entry.id.charAt(0).toUpperCase() + entry.id.slice(1);
 
             let mapHTML = '';
             if (isCity && entry.coordinates) {
@@ -1864,20 +1890,23 @@
             const readingsHTML = entry.sumerianReadings.map(r => `
                 <div class="ed-row">
                     <span class="ed-labat" style="font-family:'Cardo', serif; color:var(--red);">
-                        <span style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="عرض صورة المصدر">العلامة:${r.labat}</span>
+                        <span class="lang-ar" style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="عرض صورة المصدر">العلامة:${r.labat}</span>
+                        <span class="lang-en" style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="View Source Image">Sign:${r.labat}</span>
                     </span>
                     <div class="ed-row-left">
-                        <span class="ed-cunei">${r.cuneiform}</span>
                         <span class="ed-sum">${r.sumerian}</span>
+                        <span class="ed-cunei">${r.cuneiform}</span>
                     </div>
                 </div>
             `).join('');
 
             detail.innerHTML = `
                 <div class="ed-head">
-                    <div class="ed-name-ar">${entry.nameAr}</div>
+                    <div class="ed-name-ar lang-ar">${entry.nameAr}</div>
+                    <div class="ed-name-ar lang-en">${nameEn}</div>
                     <div class="ed-name-akk">${akkNameOnly}</div>
-                    <div class="ed-cat">${catLabel}</div>
+                    <div class="ed-cat lang-ar">${catData.nameAr}</div>
+                    <div class="ed-cat lang-en">${catData.nameEn}</div>
                 </div>
                 <div class="ed-readings">
                     ${readingsHTML}
@@ -1900,14 +1929,14 @@
                             iconAnchor: [7, 7]
                         });
                         L.marker([entry.coordinates.lat, entry.coordinates.lng], { icon }).addTo(map)
-                            .bindPopup('<b>'+entry.nameAr+'</b>').openPopup();
+                            .bindPopup('<b class="lang-ar">'+entry.nameAr+'</b><b class="lang-en">'+nameEn+'</b>').openPopup();
                     }
                 }, 100);
             }
         }
 
         /* ===================================================
-           IMAGE MODAL & ZOOM/PAN LOGIC (PERFECT POINTER ZOOM)
+           IMAGE MODAL & ZOOM/PAN LOGIC (PERFECT POINTER ZOOM & TOUCH)
            =================================================== */
         let imgScale = 1;
         let imgPointX = 0, imgPointY = 0;
@@ -1920,7 +1949,6 @@
             img.src = 'images/' + labatNum + '.png';
             modal.style.display = 'flex';
             
-            // تصفير أبعاد الصورة وحركتها داخل الإطار عند فتح صورة جديدة
             imgScale = 1; imgPointX = 0; imgPointY = 0;
             img.style.transform = `translate(0px, 0px) scale(1)`;
             img.style.cursor = 'grab';
@@ -1932,12 +1960,10 @@
             document.getElementById('sourceImg').src = '';
         }
 
-        // إعدادات التقريب والسحب الحر بداخل حدود الإطار الأبيض الثابت على مكان الماوس أو اللمس فقط
         document.addEventListener('DOMContentLoaded', () => {
             const sourceImg = document.getElementById('sourceImg');
             if(sourceImg) {
                 
-                // --- إعدادات الماوس للكمبيوتر ---
                 sourceImg.addEventListener('mousedown', function (e) {
                     e.preventDefault();
                     imgStart = { x: e.clientX - imgPointX, y: e.clientY - imgPointY };
@@ -1986,9 +2012,8 @@
                     imgPointX += offsetX * ratio;
                     imgPointY += offsetY * ratio;
                     sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
-                });
+                }, {passive: false});
 
-                // --- إعدادات اللمس (Touch) للموبايل للتقريب بأصبعين والسحب ---
                 let initialDistance = 0;
                 let initialScale = 1;
 
@@ -2009,7 +2034,7 @@
                 }, {passive: false});
 
                 sourceImg.addEventListener('touchmove', function(e) {
-                    e.preventDefault(); // يمنع الشاشة من النزول عند السحب على الصورة
+                    e.preventDefault(); 
                     if (e.touches.length === 1 && imgPanning) {
                         imgPointX = e.touches[0].clientX - imgStart.x;
                         imgPointY = e.touches[0].clientY - imgStart.y;
@@ -2062,18 +2087,23 @@
             });
 
             MAP_CITIES.forEach(city => {
+                const nameEn = city.id.charAt(0).toUpperCase() + city.id.slice(1);
+                
                 const marker = L.marker([city.coordinates.lat, city.coordinates.lng], { icon })
                     .addTo(mainMapInstance)
                     .bindPopup(`
-                        <div class="popup-name">${city.nameAr}</div>
+                        <div class="popup-name lang-ar">${city.nameAr}</div>
+                        <div class="popup-name lang-en">${nameEn}</div>
                         <div class="popup-akk">${city.nameAkk}</div>
                         <div class="popup-cuneiform" style="font-family:var(--cuneiform-font); font-size:1.4rem; color:var(--accent); direction:ltr; margin-top:4px;">${city.cuneiform}</div>
-                        <div style="margin-top:6px; font-family:'Inter', sans-serif; font-size:0.8rem; color:#777; direction:ltr; text-align:right;">
+                        <div class="lang-ar" style="margin-top:6px; font-family:'Inter', sans-serif; font-size:0.8rem; color:#777; direction:ltr; text-align:right;">
                             الإحداثيات: ${city.coordinates.lat}, ${city.coordinates.lng} 📍
+                        </div>
+                        <div class="lang-en" style="margin-top:6px; font-family:'Inter', sans-serif; font-size:0.8rem; color:#777; direction:ltr; text-align:left;">
+                            Coordinates: ${city.coordinates.lat}, ${city.coordinates.lng} 📍
                         </div>
                     `);
                 
-                // إضافة حركة التقريب عند الضغط على النقطة
                 marker.on('click', function(e) {
                     mainMapInstance.flyTo(e.latlng, 13, {
                         animate: true,
