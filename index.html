@@ -2,8 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المعجم الأكاديمي للمسماريات</title>
+    <!-- تثبيت الموقع بالكامل ومنع المستخدم من تقريب الصفحة نهائياً -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>قاموس لابات </title>
     <meta name="description" content="معجم أكاديمي للمفردات الأكدية والسومرية — قاموس لابات">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +13,7 @@
     
     <style>
         /* ===================================================
-           المعجم الأكاديمي للمسماريات — Academic Style
+          قاموس لابات 
            =================================================== */
 
         @font-face { font-family: 'Assyrian'; src: url('Assyrian.ttf'); }
@@ -748,7 +749,7 @@
 
     <nav id="topNav">
         <div class="nav-right" style="flex:1;">
-            <h2 style="font-family:'Amiri', serif; font-size:1.2rem; color:var(--text); margin:0;" data-i18n="title">المعجم الأكاديمي للمسماريات</h2>
+            <h2 style="font-family:'Amiri', serif; font-size:1.2rem; color:var(--text); margin:0;" data-i18n="title">قاموس لابات</h2>
         </div>
         <div class="nav-left">
             <button id="settingsBtn" class="icon-btn" aria-label="Settings">
@@ -770,7 +771,7 @@
         <div class="setting-group" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
             <button id="navHome" class="toggle-btn active" data-i18n="nav_home">الرئيسية</button>
             <button id="navMap" class="toggle-btn" data-i18n="nav_map">خريطة المدن</button>
-            <button id="navAbout" class="toggle-btn" data-i18n="nav_about">حول المعجم</button>
+            <button id="navAbout" class="toggle-btn" data-i18n="nav_about">حول الموقع</button>
         </div>
 
         <div class="setting-group">
@@ -784,8 +785,8 @@
         <div class="setting-group">
             <div class="setting-label" data-i18n="reading_mode">وضع القراءة</div>
             <div class="setting-row">
-                <button class="toggle-btn active" data-theme="light" data-i18n="day_mode">نهاري</button>
-                <button class="toggle-btn" data-theme="dark" data-i18n="night_mode">ليلي</button>
+                <button class="toggle-btn active" data-theme="light" data-i18n="day_mode">فاتح</button>
+                <button class="toggle-btn" data-theme="dark" data-i18n="night_mode">غامق</button>
             </div>
         </div>
 
@@ -805,14 +806,14 @@
                 <option value="Babylonian">بابلية (Babylonian)</option>
                 <option value="Assyrian">آشورية (Assyrian)</option>
             </select>
-            <div class="setting-hint" data-i18n="font_hint">اختر نوع الخط المسماري المفضل لديك</div>
+            <div class="setting-hint" data-i18n="font_hint">اختر نوع الخط المسماري = </div>
         </div>
     </div>
 
     <div id="homePage" class="page active">
         <div class="home-head">
             <div class="home-cuneiform">𒀭</div>
-            <h1 data-i18n="title">المعجم الأكاديمي للمسماريات</h1>
+            <h1 data-i18n="title">قاموس لابات</h1>
             <p class="home-sub" data-i18n="subtitle">قاموس لابات — اختر فئة للبحث</p>
         </div>
         <div class="cats-list">
@@ -821,28 +822,20 @@
                 <span class="cat-label-en">Complete Dictionary</span>
             </button>
             <button class="cat-btn" data-cat="cities">
-                <span class="cat-label" data-i18n="cat_cities">المدن</span>
+                <span class="cat-label" data-i18n="cat_cities">أسماء المدن والمواقع الجغرافية</span>
                 <span class="cat-label-en">Cities</span>
             </button>
             <button class="cat-btn" data-cat="gods">
-                <span class="cat-label" data-i18n="cat_gods">الآلهة</span>
+                <span class="cat-label" data-i18n="cat_gods">الآلهة والعفاريت</span>
                 <span class="cat-label-en">Gods</span>
             </button>
             <button class="cat-btn" data-cat="stars">
-                <span class="cat-label" data-i18n="cat_stars">النجوم</span>
+                <span class="cat-label" data-i18n="cat_stars">النجوم والابراج والكواكب</span>
                 <span class="cat-label-en">Stars</span>
             </button>
             <button class="cat-btn" data-cat="planets">
-                <span class="cat-label" data-i18n="cat_planets">الكواكب</span>
+                <span class="cat-label" data-i18n="cat_planets">أسماء الاشهر الاشورية</span>
                 <span class="cat-label-en">Planets</span>
-            </button>
-            <button class="cat-btn" data-cat="months">
-                <span class="cat-label" data-i18n="cat_months">الأشهر</span>
-                <span class="cat-label-en">Months</span>
-            </button>
-            <button class="cat-btn" data-cat="demons">
-                <span class="cat-label" data-i18n="cat_demons">العفاريت</span>
-                <span class="cat-label-en">Demons</span>
             </button>
         </div>
     </div>
@@ -858,12 +851,10 @@
                     </div>
                     <div class="ccs-items" id="ccsItems">
                         <div class="ccs-item active" data-value="all" data-i18n="cat_all">القاموس الشامل</div>
-                        <div class="ccs-item" data-value="cities" data-i18n="cat_cities">المدن</div>
-                        <div class="ccs-item" data-value="gods" data-i18n="cat_gods">الآلهة</div>
-                        <div class="ccs-item" data-value="stars" data-i18n="cat_stars">النجوم</div>
-                        <div class="ccs-item" data-value="planets" data-i18n="cat_planets">الكواكب</div>
-                        <div class="ccs-item" data-value="months" data-i18n="cat_months">الأشهر</div>
-                        <div class="ccs-item" data-value="demons" data-i18n="cat_demons">العفاريت</div>
+                        <div class="ccs-item" data-value="cities" data-i18n="cat_cities">أسماء المدن والمواقع الجغرافية</div>
+                        <div class="ccs-item" data-value="gods" data-i18n="cat_gods">الآلهة والعفاريت</div>
+                        <div class="ccs-item" data-value="stars" data-i18n="cat_stars">النجوم والابراج والكواكب</div>
+                        <div class="ccs-item" data-value="planets" data-i18n="cat_planets">أسماء الاشهر الاشورية</div>
                     </div>
                 </div>
                 <input type="hidden" id="catSwitch" value="all">
@@ -874,10 +865,15 @@
         <div id="entryDetail" class="entry-detail" style="display:none;"></div>
     </div>
 
-    <!-- Image Modal -->
-    <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; flex-direction:column; background:rgba(0,0,0,0.85); padding:20px;">
-        <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:2.5rem; cursor:pointer;">&times;</button>
-        <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:85vh; border-radius:8px; background:#fff;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
+    <!-- نافذة العرض: خلفية شبه شفافة لرؤية معالم الموقع خلفها بشكل خفيف -->
+    <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.6); overflow:hidden; touch-action:none;">
+        <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; z-index:903; display:flex; justify-content:center; align-items:center; padding-bottom: 5px;">&times;</button>
+        
+        <!-- إطار الاستوديو الثابت والمستقر بالكامل بداخل الشاشة -->
+        <div style="width:85vw; height:70vh; max-width:600px; max-height:550px; border: 12px solid #fff; border-radius: 16px; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; position:relative; display:flex; justify-content:center; align-items:center; z-index:902;">
+            <!-- الصورة حرة الحركة والتقريب فقط داخل حدود الإطار الأبيض الثابت -->
+            <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:100%; object-fit:contain; user-select: none; -webkit-user-drag: none; transform-origin: center center;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل بصيغة png في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
+        </div>
     </div>
 
     <div id="mapPage" class="page">
@@ -896,22 +892,522 @@
             <p data-i18n="about_p2">يُعتبر هذا الموقع أداة مساعدة للباحثين والطلاب في علم الآثار والمسماريات للبحث السريع عن المفردات السومرية والأكدية مع استخراج أرقام العلامات مباشرة.</p>
             <h3 data-i18n="about_sources">المصادر الأساسية</h3>
             <ul class="about-sources-list">
-                <li>Labat, R. & Malbran-Labat, F. — <em>Manuel d'épigraphie akkadienne</em></li>
-                <li>Borger, R. — <em>Mesopotamisches Zeichenlexikon (MesZL)</em></li>
+                <li>قاموس لابات</em></li>
             </ul>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <script src="data.js"></script>
     <script>
         /* ===================================================
            المعجم الأكدي السومري — قاعدة البيانات
            Akkadian-Sumerian Lexicon Database
            Based on Labat Sign List (Manuel d'épigraphie akkadienne)
            =================================================== */
-        // DICTIONARY_DATA is loaded from data.js
+        const DICTIONARY_DATA = {
+
+            // ============================================
+            // المدن — CITIES
+            // ============================================
+            cities: {
+                nameAr: "المدن",
+                nameEn: "Cities",
+                emoji: "🏛️",
+                entries: [
+                    {
+                        id: "babylon",
+                        nameAr: "مدينة بابل",
+                        nameAkk: "bābilu",
+                        sumerianReadings: [
+                            { sumerian: "E-KI", cuneiform: "𒂍𒆠",  labat: 141, labatPage: "ت 308 " },
+                            { sumerian: "KÁ-DINGIR(-RA)", cuneiform: "𒆍𒀭𒊏", labat: 97, labatPage: "ت 133 " },
+                            { sumerian: "KÁ-DINGIR(-MEŠ)", cuneiform: "𒆍𒀭𒈨𒌍", labat: 97, labatPage: "ت 133 " },
+                            { sumerian: "KÁ-DIŠ(-DIŠ)", cuneiform: "𒆍𒁹𒁹", labat: 97, labatPage: "ت 133 " },
+                            { sumerian: "NUN", cuneiform: "𒉣", labat: 79, labatPage: "ت 87 " },
+                            { sumerian: "ŠU-AN-NA", cuneiform: "𒋗𒀭𒈾", labat: 163, labatPage: "ت 354 " },
+                            { sumerian: "TIN-TIR", cuneiform: "𒁷𒌁", labat: 209, labatPage: "ت 465 " },
+                            { sumerian: "(UD-)KIB-NUN", cuneiform: "𒌓𒄒𒉣", labat: 125, labatPage: "ت 228 " },
+                        ],
+                        coordinates: { lat: 32.5421, lng: 44.4210 },
+                        keywords: ["بابل", "babylon", "babil", "بابليون", "bābilu", "babilu", "باب ايلي"]
+                    },
+                    {
+                        id: "Adab",
+                        nameAr: "مدينة أدب",
+                        nameAkk: "ud-nun-ki",
+                        sumerianReadings: [
+                            { sumerian: "ADAB", cuneiform: "𒀏", labat: "175²" , labatPage: "ت 381 " },
+                        ],
+                        coordinates: { lat: 36.3600, lng: 43.1530 },
+                        keywords: ["نينوى", "nineveh", "ninua", "نينا", "ninive"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الآلهة — GODS
+            // ============================================
+            gods: {
+                nameAr: "الآلهة",
+                nameEn: "Gods",
+                emoji: "⚡",
+                entries: [
+                    {
+                        id: "anu",
+                        nameAr: "الإله آنو",
+                        nameAkk: "Anu (Anum)",
+                        description: "آنو — إله السماء وملك الآلهة في المجمع السومري الأكدي. أب الآلهة العظام. مقره السماوي هو الأعلى بين جميع الآلهة. معبده الرئيسي 'إيانا' في مدينة أوروك.",
+                        sumerianReadings: [
+                            { sumerian: "AN", cuneiform: "𒀭", labat: 13, labatPage: "AN = Labat 13" },
+                            { sumerian: "DINGIR", cuneiform: "𒀭", labat: 13, labatPage: "DINGIR = Labat 13" }
+                        ],
+                        keywords: ["آنو", "أنو", "anu", "anum", "انو", "إله السماء"]
+                    },
+                    {
+                        id: "enlil",
+                        nameAr: "الإله إنليل",
+                        nameAkk: "Enlil (Ellil)",
+                        description: "إنليل — إله الهواء والرياح والعواصف، ملك الآلهة الفعلي وحاكم الأرض. كان أقوى الآلهة في الفترة السومرية. مقره في مدينة نيبور في معبد 'إيكور'. هو الذي يمنح الملوكية.",
+                        sumerianReadings: [
+                            { sumerian: "EN-LÍL", cuneiform: "𒂗𒆤", labat: 79, labatPage: "EN = Labat 79" },
+                            { sumerian: "dEN-LÍL", cuneiform: "𒀭𒂗𒆤", labat: 79, labatPage: "EN = Labat 79" }
+                        ],
+                        keywords: ["إنليل", "انليل", "enlil", "ellil", "إله الرياح"]
+                    },
+                    {
+                        id: "enki",
+                        nameAr: "الإله إنكي (إيا)",
+                        nameAkk: "Ea (Enki)",
+                        description: "إنكي/إيا — إله الحكمة والمياه العذبة والسحر والفنون. أحد الآلهة الثلاثة الكبار. أنقذ البشرية من الطوفان بتحذير أوتنابشتم. مقره في 'الأبسو' (المياه العذبة الجوفية) ومعبده 'إيأبسو' في أريدو.",
+                        sumerianReadings: [
+                            { sumerian: "EN-KI", cuneiform: "𒂗𒆠", labat: 79, labatPage: "EN = Labat 79" },
+                            { sumerian: "dÉ-A", cuneiform: "𒀭𒂍𒀀", labat: 308, labatPage: "É = Labat 308" }
+                        ],
+                        keywords: ["إنكي", "إيا", "انكي", "ايا", "enki", "ea", "إله الحكمة"]
+                    },
+                    {
+                        id: "marduk",
+                        nameAr: "الإله مردوخ",
+                        nameAkk: "Marduk (Bēl)",
+                        description: "مردوخ — الإله الرئيسي لبابل وكبير الآلهة في الفترة البابلية. ابن إنكي. هزم تيامات (أم الفوضى) وخلق العالم من جسدها حسب ملحمة الخلق (إينوما إليش). معبده 'إيساكيلا' في بابل.",
+                        sumerianReadings: [
+                            { sumerian: "dAMAR-UTU", cuneiform: "𒀭𒀫𒌓", labat: 371, labatPage: "AMAR = Labat 371" },
+                            { sumerian: "dŠÚ-PA-È", cuneiform: "𒀭𒋙𒉺𒂊", labat: 354, labatPage: "ŠÚ = Labat 354" }
+                        ],
+                        keywords: ["مردوخ", "مردوك", "marduk", "bēl", "bel", "إله بابل"]
+                    },
+                    {
+                        id: "ishtar",
+                        nameAr: "الإلهة عشتار (إنانا)",
+                        nameAkk: "Ištar (Inanna)",
+                        description: "عشتار/إنانا — إلهة الحب والحرب والخصوبة. أهم إلهة في بلاد الرافدين. نزلت إلى العالم السفلي لمواجهة أختها إرشكيجال. سُميت باسمها بوابة عشتار الشهيرة في بابل. مقرها معبد 'إيانا' في أوروك.",
+                        sumerianReadings: [
+                            { sumerian: "dINANNA", cuneiform: "𒀭𒈹", labat: 58, labatPage: "MÚŠ = Labat 58" },
+                            { sumerian: "d15 (DIŠTAR)", cuneiform: "𒀭𒌋𒌋𒌋", labat: 480, labatPage: "DIŠ = Labat 480" }
+                        ],
+                        keywords: ["عشتار", "إنانا", "انانا", "ishtar", "inanna", "إلهة الحب"]
+                    },
+                    {
+                        id: "shamash",
+                        nameAr: "الإله شمش (أوتو)",
+                        nameAkk: "Šamaš (Utu)",
+                        description: "شمش/أوتو — إله الشمس والعدالة. يرى كل شيء في رحلته اليومية عبر السماء. أعطى قوانين العدالة للملك حمورابي. معبده 'إيبّارا' في مدينتي سبار ولارسا. ابن الإله سين (القمر).",
+                        sumerianReadings: [
+                            { sumerian: "dUTU", cuneiform: "𒀭𒌓", labat: 228, labatPage: "UTU = Labat 228" },
+                            { sumerian: "UD", cuneiform: "𒀭𒌓", labat: 228, labatPage: "UD = Labat 228" }
+                        ],
+                        keywords: ["شمش", "أوتو", "اوتو", "shamash", "utu", "šamaš", "إله الشمس"]
+                    },
+                    {
+                        id: "sin",
+                        nameAr: "الإله سين (نانا)",
+                        nameAkk: "Sîn (Nanna)",
+                        description: "سين/نانا — إله القمر، من أهم الآلهة في بلاد الرافدين. أب الإله شمش (الشمس) وعشتار. معبده 'إيكشنوجال' في مدينة أور. كان مركز عبادته في حرّان أيضاً.",
+                        sumerianReadings: [
+                            { sumerian: "dNANNA", cuneiform: "𒀭𒋀𒆠", labat: 395, labatPage: "ŠEŠ = Labat 395" },
+                            { sumerian: "d30", cuneiform: "𒀭𒌍", labat: 472, labatPage: "30 = Labat 472" }
+                        ],
+                        keywords: ["سين", "نانا", "sin", "nanna", "sîn", "إله القمر"]
+                    },
+                    {
+                        id: "adad",
+                        nameAr: "الإله أدد (إشكور)",
+                        nameAkk: "Adad (Iškur)",
+                        description: "أدد/إشكور — إله العواصف والرعد والمطر. يمكن أن يكون مدمراً أو خيّراً بحسب مشيئته. يُصوَّر ممسكاً بالصاعقة ويقف على ثور. مهم للزراعة لأنه يتحكم في الأمطار.",
+                        sumerianReadings: [
+                            { sumerian: "dIŠKUR", cuneiform: "𒀭𒅎", labat: 399, labatPage: "IM = Labat 399" },
+                            { sumerian: "dIM", cuneiform: "𒀭𒅎", labat: 399, labatPage: "IM = Labat 399" }
+                        ],
+                        keywords: ["أدد", "إشكور", "ادد", "اشكور", "adad", "iškur", "ishkur", "إله العواصف"]
+                    },
+                    {
+                        id: "nergal",
+                        nameAr: "الإله نرجال",
+                        nameAkk: "Nergal (Erra)",
+                        description: "نرجال — إله العالم السفلي والأوبئة والحرب. زوج الإلهة إرشكيجال ملكة العالم السفلي. يُصوَّر كمحارب عنيف. ارتبط بالموت والدمار والطاعون. معبده 'إيمسلام' في مدينة كوثى.",
+                        sumerianReadings: [
+                            { sumerian: "dGÌR-UNUG-GAL", cuneiform: "𒀭𒄈𒀸𒃲", labat: 444, labatPage: "GÌR = Labat 444" },
+                            { sumerian: "dU-GUR", cuneiform: "𒀭𒌑𒄥", labat: 411, labatPage: "U = Labat 411" }
+                        ],
+                        keywords: ["نرجال", "نركال", "nergal", "erra", "إله العالم السفلي"]
+                    },
+                    {
+                        id: "nabu",
+                        nameAr: "الإله نابو",
+                        nameAkk: "Nabû",
+                        description: "نابو — إله الكتابة والحكمة والعلم. ابن الإله مردوخ. كاتب الآلهة وحافظ ألواح الأقدار. معبده 'إيزيدا' في مدينة بورسيبا القريبة من بابل. كان يُحتفل به في عيد رأس السنة (أكيتو).",
+                        sumerianReadings: [
+                            { sumerian: "dAG", cuneiform: "𒀭𒀝", labat: 127, labatPage: "AG = Labat 127" },
+                            { sumerian: "dPA", cuneiform: "𒀭𒉺", labat: 295, labatPage: "PA = Labat 295" }
+                        ],
+                        keywords: ["نابو", "نبو", "nabu", "nabû", "إله الكتابة"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // النجوم — STARS
+            // ============================================
+            stars: {
+                nameAr: "النجوم",
+                nameEn: "Stars",
+                emoji: "⭐",
+                entries: [
+                    {
+                        id: "sirius",
+                        nameAr: "نجم الشعرى اليمانية (سيريوس)",
+                        nameAkk: "Šukūdu (KAK.SI.SÁ)",
+                        description: "الشعرى اليمانية — ألمع نجم في السماء. عُرف عند البابليين باسم 'السهم' (شوكودو). كان مهماً في التقويم الفلكي البابلي وارتبط بالإلهة عشتار.",
+                        sumerianReadings: [
+                            { sumerian: "mulKAK-SI-SÁ", cuneiform: "𒀭𒆕𒋛𒁲", labat: 230, labatPage: "KAK = Labat 230" }
+                        ],
+                        keywords: ["سيريوس", "الشعرى", "sirius", "šukūdu", "kaksi"]
+                    },
+                    {
+                        id: "aldebaran",
+                        nameAr: "نجم الدبران",
+                        nameAkk: "Šūru (IS-LÈ)",
+                        description: "الدبران — النجم الأحمر اللامع في كوكبة الثور. عُرف عند البابليين باسم 'عين الثور'. كان من النجوم المهمة في الرصد الفلكي البابلي.",
+                        sumerianReadings: [
+                            { sumerian: "mulIS-LÈ", cuneiform: "𒀭𒅖ခြေ", labat: 357, labatPage: "IS = Labat 357" },
+                            { sumerian: "mulGU₄-AN-NA", cuneiform: "𒀭𒄞𒀭𒈾", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["الدبران", "aldebaran", "šūru", "عين الثور"]
+                    },
+                    {
+                        id: "pleiades",
+                        nameAr: "الثريا (نجوم الثريا)",
+                        nameAkk: "Zappu (MUL.MUL)",
+                        description: "الثريا — عنقود النجوم الشهير في كوكبة الثور. عُرف عند البابليين بـ'النجوم' (مول.مول) وتعني 'النجم من النجوم'. كان بداية الأبراج البابلية.",
+                        sumerianReadings: [
+                            { sumerian: "mulMUL-MUL", cuneiform: "𒀭𒀯𒀯", labat: 129, labatPage: "MUL = Labat 129" }
+                        ],
+                        keywords: ["الثريا", "pleiades", "zappu", "مول مول"]
+                    },
+                    {
+                        id: "regulus",
+                        nameAr: "نجم قلب الأسد",
+                        nameAkk: "Šarru (LUGAL)",
+                        description: "قلب الأسد — النجم اللامع في كوكبة الأسد. عُرف عند البابليين باسم 'الملك' (شرّو). كان يُعتبر نجماً ملكياً ومرتبطاً بالملوكية والسلطة.",
+                        sumerianReadings: [
+                            { sumerian: "mulLUGAL", cuneiform: "𒀭𒈗", labat: 266, labatPage: "LUGAL = Labat 266" },
+                            { sumerian: "mulSHARRU", cuneiform: "𒀭𒈗", labat: 266, labatPage: "LUGAL = Labat 266" }
+                        ],
+                        keywords: ["قلب الأسد", "regulus", "šarru", "الملك", "lugal"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الكواكب — PLANETS
+            // ============================================
+            planets: {
+                nameAr: "الكواكب",
+                nameEn: "Planets",
+                emoji: "🪐",
+                entries: [
+                    {
+                        id: "jupiter",
+                        nameAr: "المشتري (نيبيرو/ساكوت)",
+                        nameAkk: "Nēberu / Sagmegar",
+                        description: "المشتري — أكبر كواكب المجموعة الشمسية. ارتبط عند البابليين بالإله مردوخ. كان يُسمى 'نيبيرو' (نقطة العبور) و'ساكميكار'. من أهم الكواكب في التنجيم البابلي.",
+                        sumerianReadings: [
+                            { sumerian: "mulSAG-ME-GAR", cuneiform: "𒀭𒊕𒈨𒃻", labat: 184, labatPage: "SAG = Labat 184" },
+                            { sumerian: "mulNÉ-BI-RU", cuneiform: "𒀭𒉈𒁉𒊒", labat: 313, labatPage: "NÉ = Labat 313" }
+                        ],
+                        keywords: ["المشتري", "jupiter", "nēberu", "neberu", "sagmegar", "مردوخ كوكب"]
+                    },
+                    {
+                        id: "venus",
+                        nameAr: "الزهرة (دلبات)",
+                        nameAkk: "Dilbat",
+                        description: "الزهرة — ألمع الكواكب في السماء. ارتبط بالإلهة عشتار/إنانا. كان يظهر كنجم الصباح ونجم المساء. كان له أهمية كبيرة في التنجيم والطقوس الدينية البابلية.",
+                        sumerianReadings: [
+                            { sumerian: "mulDIL-BAT", cuneiform: "𒀭𒀸با", labat: 78, labatPage: "DIL = Labat 78" },
+                            { sumerian: "mulDILI-PAT", cuneiform: "𒀭𒀸با", labat: 78, labatPage: "DIL = Labat 78" }
+                        ],
+                        keywords: ["الزهرة", "venus", "dilbat", "دلبات", "نجم عشتار"]
+                    },
+                    {
+                        id: "saturn",
+                        nameAr: "زحل (كيمانو)",
+                        nameAkk: "Kayyamānu",
+                        description: "زحل — الكوكب البطيء الحركة. ارتبط عند البابليين بالإله نينورتا أو شمش. سُمي 'كيمانو' أي 'الثابت' لبطء حركته الظاهرية. كان مهماً في التنبؤات الفلكية.",
+                        sumerianReadings: [
+                            { sumerian: "mulGENNA", cuneiform: "𒀭𒄀𒈾", labat: 441, labatPage: "GI = Labat 441" },
+                            { sumerian: "mulUDU-IDIM-SAG-UŠ", cuneiform: "𒀭𒇽𒅂𒊕𒍑", labat: 420, labatPage: "UDU = Labat 420" }
+                        ],
+                        keywords: ["زحل", "saturn", "kayyamānu", "كيمانو", "genna"]
+                    },
+                    {
+                        id: "mars",
+                        nameAr: "المريخ (صلبتانو)",
+                        nameAkk: "Ṣalbatānu",
+                        description: "المريخ — الكوكب الأحمر. ارتبط بالإله نرجال إله الحرب والموت. سُمي 'صلبتانو'. كان ظهوره يُعتبر نذير شؤم في التنجيم البابلي ومرتبطاً بالحروب والأوبئة.",
+                        sumerianReadings: [
+                            { sumerian: "mulṢAL-BAT-A-NI", cuneiform: "𒀭𒊩با𒀀ني", labat: 493, labatPage: "ṢAL = Labat 493" },
+                            { sumerian: "mulAN-GE₆", cuneiform: "𒀭𒀭𒈪", labat: 13, labatPage: "AN = Labat 13" }
+                        ],
+                        keywords: ["المريخ", "mars", "ṣalbatānu", "صلبتانو", "نرجال كوكب"]
+                    },
+                    {
+                        id: "mercury",
+                        nameAr: "عطارد (شيخوتو)",
+                        nameAkk: "Šiḫṭu",
+                        description: "عطارد — أصغر الكواكب وأقربها إلى الشمس. ارتبط بالإله نابو إله الكتابة. كان صعب الرصد بسبب قربه من الشمس. سُمي 'شيخطو' أي 'القافز'.",
+                        sumerianReadings: [
+                            { sumerian: "mulUDU-IDIM-GU₄-UD", cuneiform: "𒀭𒇽𒅂𒄞𒌓", labat: 420, labatPage: "UDU = Labat 420" },
+                            { sumerian: "mulGU₄-UD", cuneiform: "𒀭𒄞𒌓", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["عطارد", "mercury", "šiḫṭu", "شيخطو", "نابو كوكب"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // الأشهر — MONTHS
+            // ============================================
+            months: {
+                nameAr: "الأشهر",
+                nameEn: "Months",
+                emoji: "📅",
+                entries: [
+                    {
+                        id: "nisannu",
+                        nameAr: "نيسان (الشهر الأول)",
+                        nameAkk: "Nisannu",
+                        description: "نيسان — الشهر الأول في التقويم البابلي (مارس-أبريل). شهر عيد رأس السنة (أكيتو) حيث تُتلى ملحمة الخلق 'إينوما إليش'. بداية الربيع والسنة الجديدة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-BARAG-ZAG-GAR", cuneiform: "𒌗𒁈𒍠𒃻", labat: 92, labatPage: "BARAG = Labat 92" }
+                        ],
+                        keywords: ["نيسان", "nisannu", "الشهر الأول", "أكيتو"]
+                    },
+                    {
+                        id: "ayyaru",
+                        nameAr: "أيار (الشهر الثاني)",
+                        nameAkk: "Ayyāru",
+                        description: "أيار — الشهر الثاني في التقويم البابلي (أبريل-مايو). شهر مرتبط بالثور والزراعة. كان وقت الحصاد الأول في بلاد الرافدين.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-GU₄-SI-SÁ", cuneiform: "𒌗𒄞سي𒁲", labat: 297, labatPage: "GU₄ = Labat 297" }
+                        ],
+                        keywords: ["أيار", "ayyāru", "ayyaru", "الشهر الثاني"]
+                    },
+                    {
+                        id: "simanu",
+                        nameAr: "سيوان (الشهر الثالث)",
+                        nameAkk: "Simānu",
+                        description: "سيوان — الشهر الثالث في التقويم البابلي (مايو-يونيو). مرتبط بموسم الحصاد والطقوس الزراعية.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-SIG₄-GA", cuneiform: "𒌗𒋞𒂵", labat: 384, labatPage: "SIG₄ = Labat 384" }
+                        ],
+                        keywords: ["سيوان", "simānu", "simanu", "الشهر الثالث"]
+                    },
+                    {
+                        id: "duzu",
+                        nameAr: "تموز (الشهر الرابع)",
+                        nameAkk: "Du'ūzu (Tammūz)",
+                        description: "تموز — الشهر الرابع في التقويم البابلي (يونيو-يوليو). سُمي باسم الإله تموز/دموزي حبيب عشتار الذي نزل إلى العالم السفلي. شهر الحداد والبكاء على تموز.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ŠU-NUMUN", cuneiform: "𒌗𒋗𒆰", labat: 354, labatPage: "ŠU = Labat 354" }
+                        ],
+                        keywords: ["تموز", "duzu", "du'ūzu", "tammūz", "الشهر الرابع", "دموزي"]
+                    },
+                    {
+                        id: "abu",
+                        nameAr: "آب (الشهر الخامس)",
+                        nameAkk: "Abu",
+                        description: "آب — الشهر الخامس في التقويم البابلي (يوليو-أغسطس). أحر أشهر السنة. كانت تُقام فيه طقوس خاصة بالنار والحرارة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-NE-NE-GAR", cuneiform: "𒌗𒉈𒉈𒃻", labat: 313, labatPage: "NE = Labat 313" }
+                        ],
+                        keywords: ["آب", "abu", "الشهر الخامس"]
+                    },
+                    {
+                        id: "ululu",
+                        nameAr: "أيلول (الشهر السادس)",
+                        nameAkk: "Ulūlu (Elūlu)",
+                        description: "أيلول — الشهر السادس في التقويم البابلي (أغسطس-سبتمبر). شهر التنقية والتطهير. بداية موسم الخريف.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-KIN-dINANNA", cuneiform: "𒌗𒆥𒀭𒈹", labat: 440, labatPage: "KIN = Labat 440" }
+                        ],
+                        keywords: ["أيلول", "ulūlu", "ululu", "الشهر السادس"]
+                    },
+                    {
+                        id: "tashritu",
+                        nameAr: "تشرين (الشهر السابع)",
+                        nameAkk: "Tašrītu",
+                        description: "تشرين — الشهر السابع في التقويم البابلي (سبتمبر-أكتوبر). شهر البدايات والانطلاقات. كان يُقام فيه عيد أكيتو الخريفي في بعض المدن.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-DU₆-KÙ", cuneiform: "𒌗𒇯𒆬", labat: 207, labatPage: "DU₆ = Labat 207" }
+                        ],
+                        keywords: ["تشرين", "tašrītu", "tashritu", "الشهر السابع"]
+                    },
+                    {
+                        id: "arahsamna",
+                        nameAr: "مرحشوان (الشهر الثامن)",
+                        nameAkk: "Araḫsamna",
+                        description: "مرحشوان — الشهر الثامن في التقويم البابلي (أكتوبر-نوفمبر). شهر بداية الأمطار والزراعة الشتوية في بلاد الرافدين.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-APIN-DU₈-A", cuneiform: "𒌗𒀳𒃮𒀀", labat: 100, labatPage: "APIN = Labat 100" }
+                        ],
+                        keywords: ["مرحشوان", "araḫsamna", "arahsamna", "الشهر الثامن"]
+                    },
+                    {
+                        id: "kislimu",
+                        nameAr: "كسليم (الشهر التاسع)",
+                        nameAkk: "Kislīmu",
+                        description: "كسليم — الشهر التاسع في التقويم البابلي (نوفمبر-ديسمبر). شهر البرد والشتاء. كانت تُقام فيه طقوس دينية خاصة.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-GAN-GAN-È", cuneiform: "𒌗𒃶𒃶𒂊", labat: 253, labatPage: "GAN = Labat 253" }
+                        ],
+                        keywords: ["كسليم", "kislīmu", "kislimu", "الشهر التاسع"]
+                    },
+                    {
+                        id: "tebetu",
+                        nameAr: "طيبت (الشهر العاشر)",
+                        nameAkk: "Ṭebētu",
+                        description: "طيبت — الشهر العاشر في التقويم البابلي (ديسمبر-يناير). أبرد أشهر السنة. مرتبط بالانقلاب الشتوي.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-AB-BA-È", cuneiform: "𒌗𒀊با𒂊", labat: 128, labatPage: "AB = Labat 128" }
+                        ],
+                        keywords: ["طيبت", "ṭebētu", "tebetu", "الشهر العاشر"]
+                    },
+                    {
+                        id: "shabatu",
+                        nameAr: "شباط (الشهر الحادي عشر)",
+                        nameAkk: "Šabāṭu",
+                        description: "شباط — الشهر الحادي عشر في التقويم البابلي (يناير-فبراير). شهر الرياح والعواصف. اسمه يعني 'الضرب' إشارة إلى قسوة الطقس.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ZÍZ-A", cuneiform: "𒌗𒍣𒀀", labat: 210, labatPage: "ZÍZ = Labat 210" }
+                        ],
+                        keywords: ["شباط", "šabāṭu", "shabatu", "الشهر الحادي عشر"]
+                    },
+                    {
+                        id: "addaru",
+                        nameAr: "آذار (الشهر الثاني عشر)",
+                        nameAkk: "Addaru (Adāru)",
+                        description: "آذار — الشهر الثاني عشر والأخير في التقويم البابلي (فبراير-مارس). شهر نهاية السنة والاستعداد للسنة الجديدة. كان يُضاف شهر آذار ثانٍ أحياناً لتعديل التقويم.",
+                        sumerianReadings: [
+                            { sumerian: "ITI-ŠE-KIN-KUD", cuneiform: "𒌗𒊺𒆥𒃮", labat: 367, labatPage: "ŠE = Labat 367" }
+                        ],
+                        keywords: ["آذار", "addaru", "adāru", "adaru", "الشهر الثاني عشر"]
+                    }
+                ]
+            },
+
+            // ============================================
+            // العفاريت والشياطين — DEMONS
+            // ============================================
+            demons: {
+                nameAr: "العفاريت والشياطين",
+                nameEn: "Demons",
+                emoji: "👹",
+                entries: [
+                    {
+                        id: "lamashtu",
+                        nameAr: "لماشتو",
+                        nameAkk: "Lamaštu",
+                        description: "لماشتو — أخطر العفاريت الأنثوية في بلاد الرافدين. تهدد النساء الحوامل والأطفال الرضع. ابنة الإله آنو. كانت تُصوَّر برأس أسد وجسم حمار وأقدام طائر. كانت التمائم والتعاويذ ضرورية للحماية منها.",
+                        sumerianReadings: [
+                            { sumerian: "dDÌM-ME", cuneiform: "𒀭𒁴𒈨", labat: 167, labatPage: "DÌM = Labat 167" }
+                        ],
+                        keywords: ["لماشتو", "lamaštu", "lamashtu", "عفريتة"]
+                    },
+                    {
+                        id: "pazuzu",
+                        nameAr: "بازوزو",
+                        nameAkk: "Pazuzu",
+                        description: "بازوزو — ملك شياطين الرياح. كائن مخيف له وجه وحشي وأجنحة وذيل عقرب ومخالب. ورغم طبيعته الشريرة استُخدمت صوره كتمائم حماية ضد لماشتو. 'ملك شياطين الرياح الشريرة'.",
+                        sumerianReadings: [
+                            { sumerian: "dPA-ZU-ZU", cuneiform: "𒀭پا𒍪𒍪", labat: 295, labatPage: "PA = Labat 295" }
+                        ],
+                        keywords: ["بازوزو", "pazuzu", "ملك الشياطين", "شيطان الرياح"]
+                    },
+                    {
+                        id: "utukku",
+                        nameAr: "أوتوكو (الأوتوكو الشرير)",
+                        nameAkk: "Utukku lemnu",
+                        description: "أوتوكو — نوع من الشياطين أو الأرواح الشريرة التي تسكن الأماكن المهجورة والصحارى. يمكن أن تكون خيرة أو شريرة. 'الأوتوكو الشرير' (أوتوكو ليمنو) كان من أخطر الكائنات الخارقة.",
+                        sumerianReadings: [
+                            { sumerian: "UDUG", cuneiform: "𒌜", labat: 451, labatPage: "UDUG = Labat 451" },
+                            { sumerian: "UDUG-ḪUL", cuneiform: "𒌜𒅆𒌨", labat: 451, labatPage: "UDUG = Labat 451" }
+                        ],
+                        keywords: ["أوتوكو", "utukku", "udug", "شيطان", "روح شريرة"]
+                    },
+                    {
+                        id: "alu",
+                        nameAr: "آلو",
+                        nameAkk: "Alû",
+                        description: "آلو — شيطان بلا وجه وبلا فم وبلا أذن. يختبئ في الزوايا المظلمة ويهاجم الناس في الليل. كان يُعتبر من أكثر الشياطين رعباً لأنه يسلب الناس نومهم وعقولهم.",
+                        sumerianReadings: [
+                            { sumerian: "A-LÁ", cuneiform: "𒀀𒇲", labat: 1, labatPage: "A = Labat 1" }
+                        ],
+                        keywords: ["آلو", "alû", "alu", "شيطان بلا وجه"]
+                    },
+                    {
+                        id: "gallu",
+                        nameAr: "غالو (الغالو)",
+                        nameAkk: "Gallû",
+                        description: "غالو — شياطين العالم السفلي الذين يقتادون الموتى. هم الذين أسروا الإله تموز/دموزي بدلاً من عشتار عند صعودها من العالم السفلي. لا يعرفون الرحمة ولا يأكلون ولا يشربون.",
+                        sumerianReadings: [
+                            { sumerian: "GALLA", cuneiform: "𒃲𒆷", labat: 343, labatPage: "GAL = Labat 343" }
+                        ],
+                        keywords: ["غالو", "gallû", "gallu", "galla", "شياطين العالم السفلي"]
+                    },
+                    {
+                        id: "rabisu",
+                        nameAr: "رابصو (الكامن)",
+                        nameAkk: "Rābiṣu",
+                        description: "رابصو — شيطان يكمن في المداخل والأزقة والعتبات. يُترجم اسمه بـ'الكامن' أو 'المتربص'. كان يُعتقد أنه يتربص بالناس عند أبواب المنازل والمعابد.",
+                        sumerianReadings: [
+                            { sumerian: "MÁŠKIM", cuneiform: "𒈦𒆳", labat: 340, labatPage: "MAŠ = Labat 340" }
+                        ],
+                        keywords: ["رابصو", "rabisu", "rabisu", "maškim", "الكامن", "المتربص"]
+                    },
+                    {
+                        id: "lilitu",
+                        nameAr: "ليليتو (ليليث)",
+                        nameAkk: "Lilītu (Lilitû)",
+                        description: "ليليتو — روح أنثوية ليلية شريرة مرتبطة بالرياح والعواصف الليلية. اسمها مشتق من 'ليل' (الليل). تغوي الرجال في أحلامهم. أصل أسطورة ليليث في التقاليد اللاحقة.",
+                        sumerianReadings: [
+                            { sumerian: "KI-SIKIL-LÍL-LÁ", cuneiform: "𒆠𒂖𒆤𒇲", labat: 366, labatPage: "KI = Labat 366" }
+                        ],
+                        keywords: ["ليليتو", "ليليث", "lilītu", "lilitu", "lilitû", "lilith", "روح ليلية"]
+                    },
+                    {
+                        id: "asakku",
+                        nameAr: "أساكو",
+                        nameAkk: "Asakku",
+                        description: "أساكو — شيطان المرض والحمى. كان يُعتقد أنه يسبب الأوبئة والأمراض الخطيرة. هزمه الإله نينورتا في معركة أسطورية مشهورة وصلتنا في نص 'لوغال-إي'.",
+                        sumerianReadings: [
+                            { sumerian: "À-SÀG", cuneiform: "𒀀𒊮", labat: 1, labatPage: "À = Labat 1" }
+                        ],
+                        keywords: ["أساكو", "asakku", "شيطان المرض", "asag"]
+                    }
+                ]
+            }
+        };
 
         // ============================================
         // City Coordinates for Map
@@ -959,7 +1455,7 @@
                 font_hint: 'لاستخدام خطوط إضافية، أضف ملفات الخطوط إلى مجلد fonts',
                 search_placeholder: 'ابحث...',
                 cat_all: 'القاموس الشامل',
-                cat_cities: 'المدن',
+                cat_cities: 'أسماء المدن والمواقع الجغرافية',
                 cat_gods: 'الآلهة',
                 cat_stars: 'النجوم',
                 cat_planets: 'الكواكب',
@@ -1355,7 +1851,7 @@
             const readingsHTML = entry.sumerianReadings.map(r => `
                 <div class="ed-row">
                     <span class="ed-labat" style="font-family:'Cardo', serif; color:var(--red);">
-                        <span style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="عرض صورة المصدر">ص ${r.labat}</span> و ت ${r.labat}
+                        <span style="cursor:pointer; color:inherit; text-decoration:underline;" onclick="openImgModal('${r.labat}')" title="عرض صورة المصدر">العلامة:${r.labat}</span>
                     </span>
                     <div class="ed-row-left">
                         <span class="ed-cunei">${r.cuneiform}</span>
@@ -1397,17 +1893,98 @@
             }
         }
 
+        /* ===================================================
+           IMAGE MODAL & ZOOM/PAN LOGIC (PERFECT POINTER ZOOM)
+           =================================================== */
+        let imgScale = 1;
+        let imgPointX = 0, imgPointY = 0;
+        let imgPanning = false;
+        let imgStart = { x: 0, y: 0 };
+
         function openImgModal(labatNum) {
             const modal = document.getElementById('imgModal');
             const img = document.getElementById('sourceImg');
-            img.src = 'images/' + labatNum + '.jpg';
+            img.src = 'images/' + labatNum + '.png';
             modal.style.display = 'flex';
+            
+            // تصفير أبعاد الصورة وحركتها داخل الإطار عند فتح صورة جديدة
+            imgScale = 1; imgPointX = 0; imgPointY = 0;
+            img.style.transform = `translate(0px, 0px) scale(1)`;
+            img.style.cursor = 'grab';
+            img.style.transition = 'transform 0.1s ease';
         }
 
         function closeImgModal() {
             document.getElementById('imgModal').style.display = 'none';
             document.getElementById('sourceImg').src = '';
         }
+
+        // إعدادات التقريب والسحب الحر بداخل حدود الإطار الأبيض الثابت على مكان الماوس فقط
+        document.addEventListener('DOMContentLoaded', () => {
+            const sourceImg = document.getElementById('sourceImg');
+            if(sourceImg) {
+                sourceImg.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+                    imgStart = { x: e.clientX - imgPointX, y: e.clientY - imgPointY };
+                    imgPanning = true;
+                    sourceImg.style.cursor = 'grabbing';
+                    sourceImg.style.transition = 'none'; 
+                });
+
+                sourceImg.addEventListener('mouseup', function () {
+                    imgPanning = false;
+                    sourceImg.style.cursor = 'grab';
+                    sourceImg.style.transition = 'transform 0.1s ease';
+                });
+
+                sourceImg.addEventListener('mouseleave', function () {
+                    imgPanning = false;
+                    sourceImg.style.cursor = 'grab';
+                });
+
+                sourceImg.addEventListener('mousemove', function (e) {
+                    if (!imgPanning) return;
+                    imgPointX = e.clientX - imgStart.x;
+                    imgPointY = e.clientY - imgStart.y;
+                    sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+                });
+
+                sourceImg.addEventListener('wheel', function (e) {
+                    e.preventDefault();
+                    
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+
+                    const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
+                    const zoomSpeed = 1.15;
+                    const oldScale = imgScale;
+                    
+                    if (delta > 0) {
+                        imgScale *= zoomSpeed; // تقريب
+                    } else {
+                        imgScale /= zoomSpeed; // تبعيد
+                    }
+                    
+                    // منع تصغير الصورة بشكل مبالغ فيه أو تكبيرها لدرجة تختفي
+                    if (imgScale < 0.5) imgScale = 0.5;
+                    if (imgScale > 15) imgScale = 15;
+
+                    const rect = sourceImg.getBoundingClientRect();
+                    
+                    // حساب مسافة الماوس عن مركز الصورة الحالي بالضبط
+                    const offsetX = mouseX - (rect.left + rect.width / 2);
+                    const offsetY = mouseY - (rect.top + rect.height / 2);
+
+                    // تعويض فرق التكبير بترجمة عكسية للحفاظ على نقطة الماوس ثابتة كمركز للتقريب
+                    const ratio = 1 - (imgScale / oldScale);
+                    
+                    imgPointX += offsetX * ratio;
+                    imgPointY += offsetY * ratio;
+
+                    sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+                });
+            }
+        });
 
         /* ===================================================
            FULL MAP (Main Page Map)
