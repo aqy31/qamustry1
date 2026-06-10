@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <!-- تثبيت الموقع بالكامل ومنع المستخدم من تقريب الصفحة نهائياً -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>قاموس لابات </title>
     <meta name="description" content="معجم أكاديمي للمفردات الأكدية والسومرية — قاموس لابات">
@@ -35,9 +34,7 @@
         html[lang="en"] .lang-ar { display: none !important; }
         html[lang="ar"] .lang-en { display: none !important; }
 
-        /* تعديلات الاتجاه للغة الإنجليزية (تعديل كامل للنصوص اليسرى) */
-        html[lang="en"] .sr-item { direction: ltr; }
-        html[lang="en"] .sr-part-right { justify-content: flex-start; }
+        /* تعديلات الاتجاه للغة الإنجليزية مع الحفاظ على نسق القاموس كما هو بالعربي */
         html[lang="en"] .cat-btn { flex-direction: row-reverse; text-align: left; }
         html[lang="en"] .ed-head, html[lang="en"] .ed-name-akk { text-align: left; direction: ltr; }
         html[lang="en"] .search-bar-row input { direction: ltr; }
@@ -434,7 +431,7 @@
             padding: 0 20px;
         }
         .sr-item {
-            min-height: 80px; /* لضمان تمدد المربع بحال كان النص طويلا */
+            min-height: 80px; 
             height: auto; 
             padding: 12px 24px;
             border: 1px solid var(--border-light);
@@ -483,7 +480,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             color: var(--text);
-            white-space: normal; /* السماح بالتفاف النص وعدم اختفائه */
+            white-space: normal; 
             word-break: break-word;
             display: block;
         }
@@ -493,14 +490,14 @@
             color: var(--text-muted);
             font-style: italic;
             direction: ltr;
-            white-space: normal; /* السماح بالتفاف النص وعدم اختفائه */
+            white-space: normal; 
             word-break: break-word;
             display: block;
         }
 
         .sumerian-badge {
             display: flex;
-            flex-direction: column; /* ترتيب عمودي ذكي لتقليل المساحة العرضية */
+            flex-direction: column; /* الترتيب السومري فوق، والمسماري تحته */
             justify-content: center;
             align-items: center;
             gap: 4px;
@@ -565,6 +562,8 @@
             font-weight: 700;
             color: var(--text);
             margin-bottom: 8px;
+            white-space: normal;
+            word-wrap: break-word;
         }
         .ed-name-akk {
             font-family: 'Cardo', 'ebl', 'Inter', sans-serif;
@@ -573,6 +572,8 @@
             font-style: italic;
             direction: ltr;
             text-align: right;
+            white-space: normal;
+            word-wrap: break-word;
         }
         .ed-cat {
             font-size: 0.8rem;
@@ -604,7 +605,7 @@
             position: relative;
             direction: rtl;
         }
-        /* السومري فوق والمسماري تحت من جهة اليسار للغتين */
+        
         .ed-row-left {
             display: flex;
             flex-direction: column;
@@ -652,7 +653,6 @@
             word-break: break-all;
         }
 
-        /* تنسيق الموبايل الأصلي المتناسق للعلامات */
         @media (max-width: 600px) {
             .ed-row { gap: 10px; flex-wrap: wrap; }
             .ed-sum { min-width: auto; }
@@ -799,7 +799,6 @@
             </div>
         </div>
 
-        <!-- قائمة الخطوط المنبثقة الأنيقة الجديدة -->
         <div class="setting-group">
             <div class="setting-label" data-i18n="cuneiform_font">الخط المسماري</div>
             <div class="custom-cat-switch" id="customFontSwitch" style="margin-top: 8px;">
@@ -872,13 +871,10 @@
         <div id="entryDetail" class="entry-detail" style="display:none;"></div>
     </div>
 
-    <!-- نافذة العرض: خلفية شبه شفافة لرؤية معالم الموقع خلفها بشكل خفيف -->
     <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.6); overflow:hidden; touch-action:none;">
         <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; z-index:903; display:flex; justify-content:center; align-items:center; padding-bottom: 5px;">&times;</button>
         
-        <!-- إطار الاستوديو الثابت والمستقر بالكامل بداخل الشاشة -->
         <div style="width:85vw; height:70vh; max-width:600px; max-height:550px; border: 12px solid #fff; border-radius: 16px; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; position:relative; display:flex; justify-content:center; align-items:center; z-index:902;">
-            <!-- الصورة حرة الحركة والتقريب فقط داخل حدود الإطار الأبيض الثابت -->
             <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:100%; object-fit:contain; user-select: none; -webkit-user-drag: none; transform-origin: center center;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل بصيغة png في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
         </div>
     </div>
@@ -928,7 +924,7 @@
                         nameAkk: "bābilu",
                         sumerianReadings: [
                             { sumerian: "E-KI", cuneiform: "𒂍𒆠",  labat: 141, labatPage: "ت 308 " },
-                            { sumerian: "KÁ-DINGIR(-RA)", cuneiform: "𒆍𒀭𒊏", labat: 97, labatPage: "ت 133 " },
+                            { sumerian: "KÁ-DINGIR(-RA)", cuneiform: "𒆍𒀭را", labat: 97, labatPage: "ت 133 " },
                             { sumerian: "KÁ-DINGIR(-MEŠ)", cuneiform: "𒆍𒀭𒈨𒌍", labat: 97, labatPage: "ت 133 " },
                             { sumerian: "KÁ-DIŠ(-DIŠ)", cuneiform: "𒆍𒁹𒁹", labat: 97, labatPage: "ت 133 " },
                             { sumerian: "NUN", cuneiform: "𒉣", labat: 79, labatPage: "ت 87 " },
@@ -1542,6 +1538,7 @@
                 const topNav = document.getElementById('topNav');
                 const searchBar = document.querySelector('.search-bar-row');
                 
+                // منع اخفاء الشريط إذا كان المستخدم مركز على البحث
                 if (currentScrollY > lastScrollY && currentScrollY > 80 && !isSearchFocused) {
                     topNav.style.transform = 'translateY(-100%)';
                     if (searchBar) searchBar.style.transform = 'translateY(-150%)';
@@ -1577,7 +1574,7 @@
                 showPage('homePage');
                 backBtn.style.display = 'none';
                 document.getElementById('searchInput').value = ''; 
-                closeSidePanel();
+                closeSidePanel(); // إغلاق تلقائي
             });
 
             navMap.addEventListener('click', () => {
@@ -1585,14 +1582,14 @@
                 showPage('mapPage');
                 backBtn.style.display = 'none';
                 setTimeout(initFullMap, 150);
-                closeSidePanel();
+                closeSidePanel(); // إغلاق تلقائي
             });
 
             navAbout.addEventListener('click', () => {
                 setActiveNav('navAbout');
                 showPage('aboutPage');
                 backBtn.style.display = 'none';
-                closeSidePanel();
+                closeSidePanel(); // إغلاق تلقائي
             });
 
             backBtn.addEventListener('click', () => {
@@ -1913,6 +1910,11 @@
             const entry = catData.entries.find(e => e.id === entryId);
             if (!entry) return;
 
+            const topNav = document.getElementById('topNav');
+            const searchBar = document.querySelector('.search-bar-row');
+            topNav.style.transform = 'translateY(0)';
+            if (searchBar) searchBar.style.transform = 'translateY(0)';
+
             document.getElementById('searchResults').style.display = 'none';
             const detail = document.getElementById('entryDetail');
             detail.style.display = 'block';
@@ -1964,7 +1966,11 @@
                     const mapEl = document.getElementById('cityDetailMap');
                     if (mapEl) {
                         const map = L.map(mapEl).setView([entry.coordinates.lat, entry.coordinates.lng], 7);
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                        // خريطة القمر الصناعي الافتراضية
+                        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
+                        // إضافة طبقة الحدود والأسماء والمحافظات الشفافة والمستقرة فوق الستلايت
+                        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}').addTo(map);
+                        
                         const icon = L.divIcon({
                             className: '',
                             html: '<div style="width:14px;height:14px;background:#c9a227;border:2px solid #fff;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>',
@@ -2118,8 +2124,14 @@
             const el = document.getElementById('mainMap');
             mainMapInstance = L.map(el).setView([32.5, 44.5], 6);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 14
+            // طبقة قمر صناعي واقعية صخر
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19
+            }).addTo(mainMapInstance);
+
+            // إضافة حدود المحافظات وأسماء المدن والمناطق الرسمية فوق الستلايت بشكل شفاف تماماً وبدون إعلانات
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19
             }).addTo(mainMapInstance);
 
             const icon = L.divIcon({
@@ -2147,6 +2159,12 @@
                         </div>
                     `);
                 
+                // إظهار المعلومات عند التمرير (الماوس)
+                marker.on('mouseover', function (e) {
+                    marker.openPopup();
+                });
+
+                // التقريب فقط عند الضغط (الكليك/اللمس)
                 marker.on('click', function(e) {
                     mainMapInstance.flyTo(e.latlng, 13, {
                         animate: true,
