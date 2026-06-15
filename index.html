@@ -1020,7 +1020,7 @@
                             { sumerian: "MAR-TU ", cuneiform: "𒈥𒌅", labat: 307, labatPage: "UD = Labat 228" }
                         ],
                         keywords: ["شمش", "أوتو", "اوتو", "shamash", "utu", "šamaš", "إله الشمس"]
-      
+        
                     }
                 ]
             },
@@ -1951,7 +1951,11 @@
         function openImgModal(labatNum) {
             const modal = document.getElementById('imgModal');
             const img = document.getElementById('sourceImg');
-            img.src = 'images/' + labatNum + '.png';
+            
+            // معالجة الرقم: إزالة أي مسافات زائدة قد تسبب كسر الرابط في GitHub Pages
+            const safeLabatNum = String(labatNum).trim();
+            img.src = 'images/' + safeLabatNum + '.png';
+            
             modal.style.display = 'flex';
             
             imgScale = 1; imgPointX = 0; imgPointY = 0;
