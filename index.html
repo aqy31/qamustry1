@@ -15,7 +15,6 @@
           قاموس لابات 
            =================================================== */
 
-        /* لتسريع تحميل الخطوط وجعل الموقع يفتح فوراً */
         @font-face { font-family: 'Assyrian'; src: url('Assyrian.ttf'); font-display: swap; }
         @font-face { font-family: 'Babylonian'; src: url('Babylonian.ttf'); font-display: swap; }
         @font-face { font-family: 'Sumerian'; src: url('Sumerian.ttf'); font-display: swap; }
@@ -30,11 +29,9 @@
             -webkit-user-select: none;
         }
 
-        /* --- نظام إخفاء اللغات المتبادل --- */
         html[lang="en"] .lang-ar { display: none !important; }
         html[lang="ar"] .lang-en { display: none !important; }
 
-        /* تعديلات الاتجاه للغة الإنجليزية مع الحفاظ على نسق القاموس كما هو بالعربي */
         html[lang="en"] .cat-btn { flex-direction: row-reverse; text-align: left; }
         html[lang="en"] .ed-head, html[lang="en"] .ed-name-akk { text-align: left; direction: ltr; }
         html[lang="en"] .search-bar-row input { direction: ltr; }
@@ -48,7 +45,6 @@
         html[lang="en"] .about-content h3, 
         html[lang="en"] .about-content p { direction: ltr; text-align: left; }
 
-        /* --- CSS Variables --- */
         :root {
             --bg: #fdfcf8;
             --bg-card: #ffffff;
@@ -98,7 +94,6 @@
         .page.active { display: block; animation: fadeIn 0.25s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ===== TOP NAV & SEARCH BAR ANIMATION ===== */
         #topNav {
             display: flex;
             align-items: center;
@@ -172,7 +167,6 @@
         }
         .icon-btn:hover { color: var(--text); }
 
-        /* ===== SETTINGS PANEL ===== */
         .overlay {
             display: none;
             position: fixed;
@@ -181,7 +175,7 @@
             z-index: 800;
         }
         .overlay.open { display: block; }
-        body.dark .overlay.open { background: rgba(0,0,0,0.4); }
+        body.dark .overlay.open { background: rgba(0,0,0,0.5); }
 
         .settings-panel {
             position: fixed;
@@ -272,7 +266,6 @@
         .setting-select:focus { border-color: var(--accent); }
         .setting-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
 
-        /* ===== HOME PAGE ===== */
         .home-head {
             text-align: center;
             padding: 48px 24px 24px;
@@ -326,13 +319,87 @@
             color: var(--text);
         }
 
-        /* --- Search Page Wrap --- */
         .search-container {
             display: flex;
             flex-direction: column;
         }
 
-        /* ===== SEARCH PAGE ===== */
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            z-index: 1000;
+            max-height: 380px;
+            overflow-y: auto;
+            display: none;
+        }
+        body.dark .autocomplete-dropdown {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            border-color: var(--border-light);
+        }
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--border-light);
+            direction: rtl;
+            transition: background 0.15s;
+        }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover, .autocomplete-item.active { background: var(--accent-light); }
+        .ac-icon { 
+            color: var(--text-muted); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 24px; 
+            flex-shrink: 0;
+        }
+        .ac-content { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+        .ac-main { 
+            font-family: 'Amiri', serif; 
+            font-size: 1.1rem; 
+            color: var(--text); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ac-main strong { font-weight: 700; color: var(--accent); }
+        .ac-sub { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ac-label { 
+            font-size: 0.75rem; 
+            background: var(--border-light); 
+            padding: 2px 8px; 
+            border-radius: 12px; 
+            color: var(--text-secondary); 
+            font-family: 'Inter', sans-serif;
+        }
+
         .search-bar-row input {
             flex: 1;
             padding: 12px 16px;
@@ -423,7 +490,6 @@
             font-weight: 700;
         }
 
-        /* --- Live Search Results --- */
         .search-results {
             width: 100%;
             max-width: 620px;
@@ -497,7 +563,7 @@
 
         .sumerian-badge {
             display: flex;
-            flex-direction: column; /* الترتيب السومري فوق، والمسماري تحته */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 4px;
@@ -533,6 +599,14 @@
             flex-shrink: 0;
             white-space: nowrap;
         }
+        
+        /* التظليل الاحترافي باللون الأصفر (للتطابق في النتائج الثانوية فقط) */
+        .hl {
+            background-color: rgba(255, 213, 79, 0.4);
+            color: inherit;
+            padding: 0 1px;
+            border-radius: 2px;
+        }
 
         @media (max-width: 600px) {
             .sr-item { min-height: 70px; padding: 10px; gap: 8px; }
@@ -545,7 +619,6 @@
             .sumerian-badge { padding: 6px 10px; gap: 4px; }
         }
 
-        /* --- Expanded Entry Detail --- */
         .entry-detail {
             max-width: 620px;
             margin: 0 auto;
@@ -581,7 +654,6 @@
             margin-top: 6px;
         }
 
-        /* --- Readings --- */
         .ed-readings {
             position: relative;
             padding-right: 28px;
@@ -659,7 +731,6 @@
             .ed-cunei { font-size: 1.8rem; }
         }
 
-        /* --- Map Page & Elements --- */
         .page-header {
             text-align: center;
             padding: 32px 20px;
@@ -683,7 +754,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Hide leaflet attribution */
         .leaflet-control-attribution { display: none !important; }
         .leaflet-popup-content-wrapper {
             border-radius: 8px !important;
@@ -699,7 +769,6 @@
         .popup-name { font-weight: 700; font-size: 1rem; color: #2c2c2c; }
         .popup-akk { font-size: 0.8rem; color: #888; font-style: italic; direction: ltr; text-align: right; }
 
-        /* --- About Page --- */
         .about-content {
             max-width: 600px;
             margin: 0 auto;
@@ -737,11 +806,101 @@
             line-height: 2;
         }
 
+        /* --- Image Modal Styles --- */
+        .img-modal-content {
+            width: 95vw; 
+            height: 90vh; 
+            max-width: 1200px; 
+            background: var(--bg-card); 
+            border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden;
+            z-index: 902;
+        }
+        
+        .close-modal-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 903;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 5px;
+            transition: background 0.2s;
+        }
+        .close-modal-btn:hover { background: rgba(0,0,0,0.1); }
+        
+        body.dark .close-modal-btn { background: rgba(255,255,255,0.1); color: #fff; }
+        body.dark .close-modal-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .modal-sign-number {
+            font-family: 'Cardo', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 2px solid var(--border-light);
+            background: var(--bg-card);
+            z-index: 902;
+            flex-shrink: 0;
+            letter-spacing: 2px;
+        }
+
+        .img-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fafafa;
+        }
+        body.dark .img-wrapper { background: #1a1a1a; }
+        
+        #sourceImg {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+            will-change: transform;
+            cursor: grab;
+        }
+
         @media (max-width: 600px) {
             .search-bar-row { flex-direction: column; gap: 8px; }
             .settings-panel { width: 280px; }
             .nav-right { gap: 4px; }
             .nav-text-btn { font-size: 0.95rem; padding: 6px 8px; }
+            
+            .img-modal-content {
+                width: 98vw;
+                height: 85vh;
+            }
+            .modal-sign-number {
+                font-size: 2.2rem;
+                padding: 10px 0;
+            }
+            .close-modal-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1.6rem;
+                top: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
@@ -831,15 +990,15 @@
                 <span class="cat-label" data-i18n="cat_cities">أسماء المدن والمواقع الجغرافية</span>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-            <button class="cat-btn" data-cat="gods">
+            <button class="cat-btn" data-cat="gods_demons">
                 <span class="cat-label" data-i18n="cat_gods">الآلهة والعفاريت</span>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-            <button class="cat-btn" data-cat="stars">
+            <button class="cat-btn" data-cat="stars_planets">
                 <span class="cat-label" data-i18n="cat_stars">النجوم والابراج والكواكب</span>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-            <button class="cat-btn" data-cat="planets">
+            <button class="cat-btn" data-cat="months">
                 <span class="cat-label" data-i18n="cat_planets">أسماء الاشهر الاشورية</span>
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>
             </button>
@@ -849,7 +1008,10 @@
     <div id="searchPage" class="page">
         <div id="searchContainer" class="search-container centered">
             <div class="search-bar-row">
-                <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="ابحث..." autocomplete="off" spellcheck="false">
+                <div class="search-input-wrapper">
+                    <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="ابحث..." autocomplete="off" spellcheck="false" style="width: 100%;">
+                    <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+                </div>
                 <div class="custom-cat-switch" id="customCatSwitch">
                     <div class="ccs-selected" id="ccsSelected">
                         <span id="ccsSelectedText" data-i18n="cat_all">القاموس الشامل</span>
@@ -858,9 +1020,9 @@
                     <div class="ccs-items" id="ccsItems">
                         <div class="ccs-item active" data-value="all" data-i18n="cat_all">القاموس الشامل</div>
                         <div class="ccs-item" data-value="cities" data-i18n="cat_cities">أسماء المدن والمواقع الجغرافية</div>
-                        <div class="ccs-item" data-value="gods" data-i18n="cat_gods">الآلهة والعفاريت</div>
-                        <div class="ccs-item" data-value="stars" data-i18n="cat_stars">النجوم والابراج والكواكب</div>
-                        <div class="ccs-item" data-value="planets" data-i18n="cat_planets">أسماء الاشهر الاشورية</div>
+                        <div class="ccs-item" data-value="gods_demons" data-i18n="cat_gods">الآلهة والعفاريت</div>
+                        <div class="ccs-item" data-value="stars_planets" data-i18n="cat_stars">النجوم والابراج والكواكب</div>
+                        <div class="ccs-item" data-value="months" data-i18n="cat_planets">أسماء الاشهر الاشورية</div>
                     </div>
                 </div>
                 <input type="hidden" id="catSwitch" value="all">
@@ -871,11 +1033,14 @@
         <div id="entryDetail" class="entry-detail" style="display:none;"></div>
     </div>
 
-    <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.6); overflow:hidden; touch-action:none;">
-        <button onclick="closeImgModal()" style="position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:2rem; width:45px; height:45px; border-radius:50%; cursor:pointer; z-index:903; display:flex; justify-content:center; align-items:center; padding-bottom: 5px;">&times;</button>
-        
-        <div style="width:85vw; height:70vh; max-width:600px; max-height:550px; border: 12px solid #fff; border-radius: 16px; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow:hidden; position:relative; display:flex; justify-content:center; align-items:center; z-index:902;">
-            <img id="sourceImg" src="" alt="صورة المصدر" style="max-width:100%; max-height:100%; object-fit:contain; user-select: none; -webkit-user-drag: none; transform-origin: center center;" onerror="this.onerror=null;this.alt='عذراً، الصورة غير متوفرة حالياً (يرجى التأكد من إضافة صور المصادر باسم رقم التسلسل بصيغة png في مجلد images)'; this.style.padding='40px'; this.style.color='#000';">
+    <div id="imgModal" class="overlay" style="z-index:900; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.8); touch-action:none;">
+        <div class="img-modal-content">
+            <button onclick="closeImgModal()" class="close-modal-btn">&times;</button>
+            <div id="modalSignNumberDisplay" class="modal-sign-number"></div>
+            <div class="img-wrapper" id="imgWrapper" style="align-items: flex-start;">
+                <div id="sourceImgContainer" style="display:flex; flex-direction:column; gap:30px; align-items:center; transform-origin: 0 0; cursor: grab; width: 100%; padding: 40px 0;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -905,8 +1070,6 @@
     <script>
         /* ===================================================
            المعجم الأكدي السومري — قاعدة البيانات
-           Akkadian-Sumerian Lexicon Database
-           Based on Labat Sign List (Manuel d'épigraphie akkadienne)
            =================================================== */
         const DICTIONARY_DATA = {
 
@@ -967,7 +1130,7 @@
                             { sumerian: "LUGAL", cuneiform: "𒈗", labat: 151, labatPage: "DINGIR = Labat 13" },
                             { sumerian: "U", cuneiform: "𒌋", labat: 411, labatPage: "DINGIR = Labat 13" }
                         ],
-                        keywords: ["آنو", " Porno", "anu", "anum", "انو", "إله السماء"]
+                        keywords: ["آنو", "anu", "anum", "انو", "إله السماء"]
                     },
                     {
                         id: "enlil",
@@ -1396,7 +1559,6 @@
         let fontSize = 16;
         let mainMapInstance = null;
 
-        // الترجمة الشاملة لجميع محتويات الموقع
         const i18n = {
             ar: {
                 title: 'المعجم الأكاديمي للمسماريات',
@@ -1468,10 +1630,11 @@
             initCategories();
             initSearch();
             initScrollHide();
+            initImageZoomPan();
         });
 
         /* ===================================================
-           SCROLL HIDE/SHOW NAVBAR & SEARCH (تأثير الإخفاء عند النزول)
+           SCROLL HIDE/SHOW NAVBAR & SEARCH
            =================================================== */
         function initScrollHide() {
             let lastScrollY = window.scrollY;
@@ -1483,6 +1646,12 @@
                     isSearchFocused = true;
                     document.getElementById('topNav').style.transform = 'translateY(0)';
                     document.querySelector('.search-bar-row').style.transform = 'translateY(0)';
+
+                    if (document.getElementById('entryDetail').style.display === 'block') {
+                        document.getElementById('entryDetail').style.display = 'none';
+                        document.getElementById('searchResults').style.display = 'block';
+                        doSearch(); 
+                    }
                 });
                 searchInput.addEventListener('blur', () => {
                     isSearchFocused = false;
@@ -1494,7 +1663,6 @@
                 const topNav = document.getElementById('topNav');
                 const searchBar = document.querySelector('.search-bar-row');
                 
-                // منع اخفاء الشريط إذا كان المستخدم مركز على البحث
                 if (currentScrollY > lastScrollY && currentScrollY > 80 && !isSearchFocused) {
                     topNav.style.transform = 'translateY(-100%)';
                     if (searchBar) searchBar.style.transform = 'translateY(-150%)';
@@ -1530,7 +1698,7 @@
                 showPage('homePage');
                 backBtn.style.display = 'none';
                 document.getElementById('searchInput').value = ''; 
-                closeSidePanel(); // إغلاق تلقائي
+                closeSidePanel(); 
             });
 
             navMap.addEventListener('click', () => {
@@ -1538,14 +1706,14 @@
                 showPage('mapPage');
                 backBtn.style.display = 'none';
                 setTimeout(initFullMap, 150);
-                closeSidePanel(); // إغلاق تلقائي
+                closeSidePanel(); 
             });
 
             navAbout.addEventListener('click', () => {
                 setActiveNav('navAbout');
                 showPage('aboutPage');
                 backBtn.style.display = 'none';
-                closeSidePanel(); // إغلاق تلقائي
+                closeSidePanel(); 
             });
 
             backBtn.addEventListener('click', () => {
@@ -1587,7 +1755,6 @@
             closeBtn.addEventListener('click', close);
             overlay.addEventListener('click', close);
 
-            // Language toggle
             document.querySelectorAll('[data-lang]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('[data-lang]').forEach(b => b.classList.remove('active'));
@@ -1597,7 +1764,6 @@
                 });
             });
 
-            // Theme toggle
             document.querySelectorAll('[data-theme]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('[data-theme]').forEach(b => b.classList.remove('active'));
@@ -1610,7 +1776,6 @@
                 });
             });
 
-            // Font size
             document.getElementById('fontIncrease').addEventListener('click', () => {
                 if (fontSize < 24) {
                     fontSize++;
@@ -1624,7 +1789,6 @@
                 }
             });
 
-            // القائمة المنبثقة للخط المسماري
             const fontSelected = document.getElementById('fontSelected');
             const fontItems = document.getElementById('fontItems');
             const fontSelectedText = document.getElementById('fontSelectedText');
@@ -1708,8 +1872,47 @@
         }
 
         /* ===================================================
-           SEARCH LOGIC
+           SEARCH LOGIC (الترتيب الأبجدي السومري بدقة للفهارس)
            =================================================== */
+        let acSelectedIndex = -1;
+
+        function handleAutocompleteKeydown(e) {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (dropdown.style.display !== 'block') return;
+            const items = dropdown.querySelectorAll('.autocomplete-item');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                acSelectedIndex = (acSelectedIndex + 1) % items.length;
+                updateAutocompleteSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                acSelectedIndex = (acSelectedIndex - 1 + items.length) % items.length;
+                updateAutocompleteSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (acSelectedIndex >= 0 && acSelectedIndex < items.length) {
+                    items[acSelectedIndex].click();
+                } else {
+                    items[0].click();
+                }
+            } else if (e.key === 'Escape') {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        function updateAutocompleteSelection(items) {
+            items.forEach((item, index) => {
+                if (index === acSelectedIndex) {
+                    item.classList.add('active');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
         function initSearch() {
             const input = document.getElementById('searchInput');
             const catSwitch = document.getElementById('catSwitch');
@@ -1717,6 +1920,10 @@
             const ccsItems = document.getElementById('ccsItems');
 
             input.addEventListener('input', doSearch);
+            input.addEventListener('keydown', handleAutocompleteKeydown);
+            input.addEventListener('focus', () => {
+                if (input.value.trim().length > 0) doSearch();
+            });
             
             ccsSelected.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -1728,133 +1935,352 @@
                 item.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const val = item.dataset.value;
-                    
                     catSwitch.value = val;
                     currentCat = val;
                     updateCustomDropdownUI(val);
-                    
                     ccsSelected.classList.remove('open');
                     ccsItems.classList.remove('open');
-                    
                     doSearch();
                 });
             });
 
-            document.addEventListener('click', () => {
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-input-wrapper')) {
+                    const dropdown = document.getElementById('autocompleteDropdown');
+                    if(dropdown) dropdown.style.display = 'none';
+                }
                 ccsSelected.classList.remove('open');
                 ccsItems.classList.remove('open');
             });
         }
 
-        function doSearch() {
-            const q = document.getElementById('searchInput').value.trim().toLowerCase();
-            const area = document.getElementById('searchResults');
-            const detail = document.getElementById('entryDetail');
-            const container = document.getElementById('searchContainer');
+        // تحويل الأرقام العربية إلى إنجليزية
+        function normalizeDigits(str) {
+            if (!str) return '';
+            return str.replace(/[٠١٢٣٤٥٦٧٨٩]/g, d => '0123456789'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]);
+        }
 
-            detail.style.display = 'none';
-            area.style.display = 'block';
+        // تطهير وتطبيع النصوص لتسهيل البحث والمطابقة
+        function normalizeText(str) {
+            if (!str) return '';
+            return str.toLowerCase()
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/[šš]/gi, 's')
+                .replace(/[ṣṣ]/gi, 's')
+                .replace(/[ṭṭ]/gi, 't')
+                .replace(/[āáâ]/gi, 'a')
+                .replace(/[ēéê]/gi, 'e')
+                .replace(/[īíî]/gi, 'i')
+                .replace(/[ūúû]/gi, 'u')
+                .replace(/[\(\)\-\s]/g, ''); // إزالة الأقواس والواصلات والمسافات
+        }
 
-            if (q.length === 0) {
-                area.innerHTML = '';
-                container.classList.add('centered');
-                return;
-            } else {
-                container.classList.remove('centered');
+        // استخراج أرقام العلامات (Labat Numbers) كرقم صحيح
+        function parseLabat(labatVal) {
+            if (labatVal === null || labatVal === undefined) return null;
+            const s = String(labatVal).trim();
+            const match = s.match(/^\d+/);
+            return match ? parseInt(match[0], 10) : null;
+        }
+
+        // استخراج الصيغ المحتملة للكلمة السومرية للبحث الأبجدي بالبادئة
+        function getSumerianSearchVariants(sumerian) {
+            if (!sumerian) return [];
+            const variants = [sumerian];
+            let clean = sumerian;
+            
+            // إزالة بادئة النجوم mul
+            if (clean.toLowerCase().startsWith('mul')) {
+                variants.push(clean.slice(3));
+            }
+            // إزالة بادئة الأشهر iti-
+            if (clean.toLowerCase().startsWith('iti-')) {
+                variants.push(clean.slice(4));
+            }
+            // إزالة بادئة الآلهة d
+            if (clean.startsWith('d') && clean.length > 1 && clean[1] === clean[1].toUpperCase()) {
+                variants.push(clean.slice(1));
+            }
+            // إزالة الأقواس البادئة مثل (UD-)
+            const parenMatch = clean.match(/^\([^)]+\)-?(.*)/);
+            if (parenMatch) {
+                variants.push(parenMatch[1]);
+            }
+            
+            return variants.map(v => normalizeText(v)).filter(Boolean);
+        }
+
+        // مفتاح الترتيب الأبجدي السومري (لترتيب دقيق للمدخلات بدون بادئات مساعدة)
+        function getSumerianSortKey(sumerian) {
+            if (!sumerian) return '';
+            let clean = sumerian;
+            if (clean.toLowerCase().startsWith('mul')) clean = clean.slice(3);
+            else if (clean.toLowerCase().startsWith('iti-')) clean = clean.slice(4);
+            else if (clean.startsWith('d') && clean.length > 1 && clean[1] === clean[1].toUpperCase()) clean = clean.slice(1);
+            
+            const parenMatch = clean.match(/^\([^)]+\)-?(.*)/);
+            if (parenMatch) clean = parenMatch[1];
+            
+            return normalizeText(clean);
+        }
+
+        // بناء Regex متطور للهايلايت يدعم تظليل كافة الأشكال والحروف المتطابقة
+        function getHighlightRegex(q) {
+            if (!q) return null;
+            let pattern = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            
+            const maps = [
+                { chars: 'aāáâ', pattern: '[aāáâ]' },
+                { chars: 'eēéê', pattern: '[eēéê]' },
+                { chars: 'iīíî', pattern: '[iīíî]' },
+                { chars: 'uūúû', pattern: '[uūúû]' },
+                { chars: 'sšṣ', pattern: '[sšṣ]' },
+                { chars: 'tṭ', pattern: '[tṭ]' },
+                { chars: 'اأإآ', pattern: '[اأإآ]' },
+                { chars: 'هة', pattern: '[هة]' },
+                { chars: 'ىي', pattern: '[ىي]' }
+            ];
+            
+            const digitMaps = [
+                { chars: '0٠', pattern: '[0٠]' },
+                { chars: '1١', pattern: '[1١]' },
+                { chars: '2٢', pattern: '[2٢]' },
+                { chars: '3٣', pattern: '[3٣]' },
+                { chars: '4٤', pattern: '[4٤]' },
+                { chars: '5٥', pattern: '[5٥]' },
+                { chars: '6٦', pattern: '[6٦]' },
+                { chars: '7٧', pattern: '[7٧]' },
+                { chars: '8٨', pattern: '[8٨]' },
+                { chars: '9٩', pattern: '[9٩]' }
+            ];
+            
+            let finalPattern = '';
+            for (let i = 0; i < pattern.length; i++) {
+                const char = pattern[i].toLowerCase();
+                let replaced = false;
+                for (const map of [...maps, ...digitMaps]) {
+                    if (map.chars.includes(char)) {
+                        finalPattern += map.pattern;
+                        replaced = true;
+                        break;
+                    }
+                }
+                if (!replaced) {
+                    finalPattern += pattern[i];
+                }
+            }
+            return new RegExp(`(${finalPattern})`, 'gi');
+        }
+
+        // دالة التظليل الاحترافية باللون الأصفر
+        function highlightMatch(text, q) {
+            if (!q || !text) return text;
+            const regex = getHighlightRegex(q);
+            if (!regex) return text;
+            return String(text).replace(regex, `<mark class="hl">$1</mark>`);
+        }
+
+        // إضافة shouldHighlight للتحكم بظهور التظليل في النتائج
+        function buildResultItem(r, q, shouldHighlight = false) {
+            let displayCunei = r.entry.sumerianReadings[0]?.cuneiform || '';
+            let displaySum = r.entry.sumerianReadings[0]?.sumerian || '';
+            let displayLabat = r.entry.sumerianReadings[0]?.labat || '';
+
+            if (r.matchedReadings.length > 0) {
+                const m = r.matchedReadings[0];
+                displayCunei = m.cuneiform;
+                displaySum = m.sumerian;
+                displayLabat = m.labat || '';
             }
 
-            const results = [];
-            const cats = currentCat === 'all' ? Object.keys(DICTIONARY_DATA) : [currentCat];
+            const akkNameOnly = r.entry.nameAkk.split('(')[0].trim();
+            const nameEn = r.entry.id.charAt(0).toUpperCase() + r.entry.id.slice(1);
+            
+            const safeQ = shouldHighlight ? q : null; // استخدام الكلمة للتظليل فقط إن طلبنا
+
+            return `
+                <div class="sr-item" data-id="${r.entry.id}" data-cat="${r.catKey}">
+                    <div class="sr-part-right">
+                        <span class="sr-name lang-ar">${highlightMatch(r.entry.nameAr, safeQ)}</span>
+                        <span class="sr-name lang-en">${highlightMatch(nameEn, safeQ)}</span>
+                    </div>
+                    <div class="sr-part-center">
+                        <span class="sr-akk">${highlightMatch(akkNameOnly, safeQ)}</span>
+                    </div>
+                    <div class="sr-part-left">
+                        <div class="sumerian-badge">
+                            <span class="badge-sum">${highlightMatch(displaySum, safeQ)}</span>
+                            <span class="badge-cunei">${displayCunei}</span>
+                            ${displayLabat ? `<span class="badge-labat">${highlightMatch(displayLabat, safeQ)}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateAutocomplete(rawQ, normQ, cats) {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            acSelectedIndex = -1;
+
+            if (!normQ) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            let suggestions = [];
 
             cats.forEach(catKey => {
                 const catData = DICTIONARY_DATA[catKey];
                 if (!catData) return;
 
                 catData.entries.forEach(entry => {
-                    let matchedReadings = [];
+                    const searchableItems = [];
+                    searchableItems.push({ text: entry.nameAr, type: 'ar', label: 'عربي', isTitle: true });
+                    searchableItems.push({ text: entry.nameAkk.split('(')[0].trim(), type: 'akk', label: 'أكدي', isTitle: true });
+                    searchableItems.push({ text: entry.id, type: 'en', label: 'English', isTitle: true });
+                    if (entry.keywords) {
+                        entry.keywords.forEach(kw => searchableItems.push({ text: kw, type: 'kw', label: 'مفتاحية' }));
+                    }
                     entry.sumerianReadings.forEach(r => {
-                        const sumMatch = r.sumerian.toLowerCase().includes(q);
-                        const labatMatch = r.labat && r.labat.toString().includes(q);
-                        if (sumMatch || labatMatch) {
-                            matchedReadings.push(r);
+                        searchableItems.push({ text: r.sumerian, type: 'sum', label: 'سومري' });
+                        searchableItems.push({ text: r.cuneiform, type: 'cunei', label: 'مسماري' });
+                        if (r.labat) searchableItems.push({ text: r.labat.toString(), type: 'labat', label: 'رقم لابات' });
+                    });
+
+                    let bestMatch = null;
+                    let minScore = Infinity;
+
+                    searchableItems.forEach(item => {
+                        const normItem = normalizeText(normalizeDigits(item.text));
+                        if (normItem.includes(normQ)) {
+                            let score = 2;
+                            if (normItem === normQ) score = 0;
+                            else if (normItem.startsWith(normQ)) score = 1;
+                            
+                            if (item.isTitle) score -= 0.5;
+
+                            if (score < minScore) {
+                                minScore = score;
+                                bestMatch = item;
+                            }
                         }
                     });
 
-                    const matchAr = entry.nameAr.includes(q);
-                    const matchAkk = entry.nameAkk.toLowerCase().includes(q);
-                    const matchKw = entry.keywords.some(kw => kw.toLowerCase().includes(q));
+                    if (bestMatch) {
+                        let subText = entry.nameAr;
+                        if (bestMatch.type === 'ar') subText = entry.nameAkk.split('(')[0].trim();
 
-                    if (matchAr || matchAkk || matchKw || matchedReadings.length > 0) {
-                        let score = 0;
-                        if (matchAr) {
-                            if (entry.nameAr === q || entry.nameAr.includes(" " + q)) score += 100;
-                            else score += 50;
-                        }
-                        if (matchKw) {
-                            if (entry.keywords.includes(q)) score += 80;
-                            else score += 40;
-                        }
-                        if (matchedReadings.length > 0) score += 30;
-                        if (matchAkk) score += 20;
-                        
-                        results.push({ entry, catKey, score, matchedReadings });
+                        suggestions.push({
+                            matchText: bestMatch.text,
+                            subText: subText,
+                            label: bestMatch.label,
+                            entry: entry,
+                            catKey: catKey,
+                            score: minScore,
+                            sortKey: normalizeText(bestMatch.text)
+                        });
                     }
                 });
             });
 
-            results.sort((a, b) => b.score - a.score);
+            const uniqueSuggestions = [];
+            const seen = new Set();
+            suggestions.forEach(s => {
+                const key = s.matchText.toLowerCase() + '|' + s.entry.id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    uniqueSuggestions.push(s);
+                }
+            });
 
-            if (results.length === 0) {
-                area.innerHTML = `<div style="text-align:center;padding:36px 0;color:var(--text-muted);font-family:Amiri,serif;">
-                    <span class="lang-ar">${i18n.ar.no_results}</span>
-                    <span class="lang-en">${i18n.en.no_results}</span>
-                </div>`;
+            uniqueSuggestions.sort((a, b) => {
+                if (a.score !== b.score) return a.score - b.score;
+                const isANum = /^\d+$/.test(a.sortKey);
+                const isBNum = /^\d+$/.test(b.sortKey);
+                if (isANum && isBNum) {
+                    return parseInt(a.sortKey, 10) - parseInt(b.sortKey, 10);
+                }
+                return a.sortKey.localeCompare(b.sortKey, 'en');
+            });
+
+            const topSuggestions = uniqueSuggestions.slice(0, 10);
+
+            if (topSuggestions.length === 0) {
+                dropdown.style.display = 'none';
                 return;
             }
 
-            // Render results
-            area.innerHTML = results.map((r, index) => {
-                let displayCunei = r.entry.sumerianReadings[0]?.cuneiform || '';
-                let displaySum = r.entry.sumerianReadings[0]?.sumerian || '';
-                let displayLabat = r.entry.sumerianReadings[0]?.labat || '';
+            const getHighlight = (text, q) => {
+                if (!text) return '';
+                const regex = getHighlightRegex(q);
+                if (!regex) return text;
+                return String(text).replace(regex, `<strong>$1</strong>`);
+            };
 
-                if (r.matchedReadings.length > 0) {
-                    const m = r.matchedReadings[0];
-                    displayCunei = m.cuneiform;
-                    displaySum = m.sumerian;
-                    displayLabat = m.labat || '';
-                }
-
-                const akkNameOnly = r.entry.nameAkk.split('(')[0].trim();
-                const nameEn = r.entry.id.charAt(0).toUpperCase() + r.entry.id.slice(1);
-
-                return `
-                    <div class="sr-item" data-id="${r.entry.id}" data-cat="${r.catKey}">
-                        <div class="sr-part-right">
-                            <span class="sr-name lang-ar">${r.entry.nameAr}</span>
-                            <span class="sr-name lang-en">${nameEn}</span>
-                        </div>
-                        <div class="sr-part-center">
-                            <span class="sr-akk">${akkNameOnly}</span>
-                        </div>
-                        <div class="sr-part-left">
-                            <div class="sumerian-badge">
-                                <span class="badge-sum">${displaySum}</span>
-                                <span class="badge-cunei">${displayCunei}</span>
-                                ${displayLabat ? `<span class="badge-labat">${displayLabat}</span>` : ''}
-                            </div>
-                        </div>
+            dropdown.innerHTML = topSuggestions.map(s => `
+                <div class="autocomplete-item" data-id="${s.entry.id}" data-cat="${s.catKey}">
+                    <div class="ac-icon">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     </div>
-                `;
-            }).join('');
+                    <div class="ac-content">
+                        <div class="ac-main">
+                            <span style="direction: ${/^[a-zA-Z]/.test(s.matchText) ? 'ltr' : 'rtl'}">${getHighlight(s.matchText, rawQ)}</span>
+                            <span class="ac-label">${s.label}</span>
+                        </div>
+                        <div class="ac-sub">${s.subText}</div>
+                    </div>
+                </div>
+            `).join('');
 
-            area.querySelectorAll('.sr-item').forEach(item => {
-                item.addEventListener('click', () => {
+            dropdown.style.display = 'block';
+
+            dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const id = item.dataset.id;
                     const cat = item.dataset.cat;
+                    document.getElementById('searchInput').value = item.querySelector('.ac-main span:first-child').innerText.replace(/\\n/g, '').trim(); 
+                    dropdown.style.display = 'none';
                     showDetail(id, cat);
                 });
             });
+        }
+
+        function doSearch() {
+            const rawQ = document.getElementById('searchInput').value;
+            const normalizedQ = normalizeDigits(rawQ).trim().toLowerCase();
+            const detail = document.getElementById('entryDetail');
+            const container = document.getElementById('searchContainer');
+            const area = document.getElementById('searchResults');
+
+            detail.style.display = 'none';
+            area.style.display = 'none'; // Ensure background search results are hidden
+            area.innerHTML = ''; // Clear background results
+
+            if (normalizedQ.length === 0) {
+                container.classList.add('centered');
+                document.getElementById('autocompleteDropdown').style.display = 'none';
+                return;
+            } else {
+                container.classList.remove('centered');
+            }
+
+            const normQ = normalizeText(normalizedQ);
+
+            let cats = [];
+            if (currentCat === 'all') {
+                cats = Object.keys(DICTIONARY_DATA);
+            } else if (currentCat === 'gods_demons') {
+                cats = ['gods', 'demons'];
+            } else if (currentCat === 'stars_planets') {
+                cats = ['stars', 'planets'];
+            } else if (currentCat === 'months') {
+                cats = ['months'];
+            } else {
+                cats = [currentCat];
+            }
+
+            updateAutocomplete(rawQ, normQ, cats);
         }
 
         /* ===================================================
@@ -1922,9 +2348,7 @@
                     const mapEl = document.getElementById('cityDetailMap');
                     if (mapEl) {
                         const map = L.map(mapEl).setView([entry.coordinates.lat, entry.coordinates.lng], 7);
-                        // خريطة القمر الصناعي الافتراضية
                         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
-                        // إضافة طبقة الحدود والأسماء والمحافظات الشفافة والمستقرة فوق الستلايت
                         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}').addTo(map);
                         
                         const icon = L.divIcon({
@@ -1941,136 +2365,197 @@
         }
 
         /* ===================================================
-           IMAGE MODAL & ZOOM/PAN LOGIC (PERFECT POINTER ZOOM & TOUCH)
+           IMAGE MODAL & ADVANCED SMOOTH ZOOM/PAN LOGIC (Studio Style)
            =================================================== */
         let imgScale = 1;
-        let imgPointX = 0, imgPointY = 0;
-        let imgPanning = false;
-        let imgStart = { x: 0, y: 0 };
+        let imgPanX = 0;
+        let imgPanY = 0;
+        let isImgDragging = false;
+        let imgStartX = 0, imgStartY = 0;
+
+        function updateImgTransform() {
+            const container = document.getElementById('sourceImgContainer');
+            if (container) {
+                container.style.transform = `translate(${imgPanX}px, ${imgPanY}px) scale(${imgScale})`;
+            }
+        }
 
         function openImgModal(labatNum) {
             const modal = document.getElementById('imgModal');
-            const img = document.getElementById('sourceImg');
+            const signDisplay = document.getElementById('modalSignNumberDisplay');
+            const container = document.getElementById('sourceImgContainer');
             
-            // معالجة الرقم: إزالة أي مسافات زائدة قد تسبب كسر الرابط في GitHub Pages
-            const safeLabatNum = String(labatNum).trim();
-            img.src = 'images/' + safeLabatNum + '.png';
+            const safeLabatNum = encodeURIComponent(String(labatNum).trim());
+            signDisplay.textContent = String(labatNum).trim();
             
+            container.innerHTML = '<div style="color:var(--text-color); padding: 20px;">جاري التحميل...</div>';
             modal.style.display = 'flex';
             
-            imgScale = 1; imgPointX = 0; imgPointY = 0;
-            img.style.transform = `translate(0px, 0px) scale(1)`;
-            img.style.cursor = 'grab';
-            img.style.transition = 'transform 0.1s ease';
+            imgScale = 1; imgPanX = 0; imgPanY = 0;
+            updateImgTransform();
+            
+            let loaded = 0;
+            let errors = 0;
+            const max = 5;
+            let validImages = [];
+
+            const checkDone = () => {
+                if (loaded + errors === max) {
+                    if (validImages.length === 0) {
+                        const baseImg = new Image();
+                        baseImg.src = `images/${safeLabatNum}.png`;
+                        baseImg.onload = () => {
+                            renderModalImages([baseImg.src]);
+                        };
+                        baseImg.onerror = () => {
+                            container.innerHTML = '<div style="color:var(--text-color); padding: 20px;">عذراً، الصورة غير متوفرة حالياً</div>';
+                        };
+                    } else {
+                        validImages.sort((a,b) => a.i - b.i);
+                        renderModalImages(validImages.map(v => v.src));
+                    }
+                }
+            };
+
+            for (let i = 1; i <= max; i++) {
+                const img = new Image();
+                img.src = `images/${safeLabatNum}-${i}.png`;
+                img.onload = () => {
+                    validImages.push({ i, src: img.src });
+                    loaded++;
+                    checkDone();
+                };
+                img.onerror = () => {
+                    errors++;
+                    checkDone();
+                };
+            }
+        }
+
+        function renderModalImages(srcs) {
+            const container = document.getElementById('sourceImgContainer');
+            container.innerHTML = srcs.map(src => `<img src="${src}" style="max-width:90%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); background:#fff; display:block; border-radius: 8px;">`).join('');
         }
 
         function closeImgModal() {
             document.getElementById('imgModal').style.display = 'none';
-            document.getElementById('sourceImg').src = '';
+            document.getElementById('sourceImgContainer').innerHTML = '';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const sourceImg = document.getElementById('sourceImg');
-            if(sourceImg) {
-                
-                sourceImg.addEventListener('mousedown', function (e) {
-                    e.preventDefault();
-                    imgStart = { x: e.clientX - imgPointX, y: e.clientY - imgPointY };
-                    imgPanning = true;
-                    sourceImg.style.cursor = 'grabbing';
-                    sourceImg.style.transition = 'none'; 
-                });
+        function initImageZoomPan() {
+            const wrapper = document.getElementById('imgWrapper');
+            const container = document.getElementById('sourceImgContainer');
+            if(!wrapper || !container) return;
 
-                sourceImg.addEventListener('mouseup', function () {
-                    imgPanning = false;
-                    sourceImg.style.cursor = 'grab';
-                    sourceImg.style.transition = 'transform 0.1s ease';
-                });
+            wrapper.addEventListener('mousedown', e => {
+                e.preventDefault();
+                isImgDragging = true;
+                imgStartX = e.clientX - imgPanX;
+                imgStartY = e.clientY - imgPanY;
+                container.style.cursor = 'grabbing';
+            });
 
-                sourceImg.addEventListener('mouseleave', function () {
-                    imgPanning = false;
-                    sourceImg.style.cursor = 'grab';
-                });
+            window.addEventListener('mousemove', e => {
+                if (!isImgDragging) return;
+                imgPanX = e.clientX - imgStartX;
+                imgPanY = e.clientY - imgStartY;
+                updateImgTransform();
+            });
 
-                sourceImg.addEventListener('mousemove', function (e) {
-                    if (!imgPanning) return;
-                    imgPointX = e.clientX - imgStart.x;
-                    imgPointY = e.clientY - imgStart.y;
-                    sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
-                });
+            window.addEventListener('mouseup', () => {
+                isImgDragging = false;
+                container.style.cursor = 'grab';
+            });
 
-                sourceImg.addEventListener('wheel', function (e) {
-                    e.preventDefault();
-                    const mouseX = e.clientX;
-                    const mouseY = e.clientY;
-                    const delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
-                    const zoomSpeed = 1.15;
+            wrapper.addEventListener('wheel', e => {
+                e.preventDefault();
+                const delta = Math.sign(e.deltaY) * -0.15; 
+                const oldScale = imgScale;
+                imgScale = Math.max(0.2, Math.min(imgScale * (1 + delta), 20));
+
+                const wrapperRect = wrapper.getBoundingClientRect();
+                const pointerX = e.clientX - wrapperRect.left;
+                const pointerY = e.clientY - wrapperRect.top;
+
+                const unscaledX = (pointerX - imgPanX) / oldScale;
+                const unscaledY = (pointerY - imgPanY) / oldScale;
+
+                imgPanX = pointerX - unscaledX * imgScale;
+                imgPanY = pointerY - unscaledY * imgScale;
+
+                updateImgTransform();
+            }, { passive: false });
+
+            let lastPinchDistance = null;
+            let lastCenterX = null;
+            let lastCenterY = null;
+
+            wrapper.addEventListener('touchstart', e => {
+                if (e.touches.length === 1) {
+                    isImgDragging = true;
+                    imgStartX = e.touches[0].clientX - imgPanX;
+                    imgStartY = e.touches[0].clientY - imgPanY;
+                } else if (e.touches.length === 2) {
+                    isImgDragging = false;
+                    lastPinchDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    lastCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    lastCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                }
+            }, { passive: false });
+
+            wrapper.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (e.touches.length === 1 && isImgDragging) {
+                    imgPanX = e.touches[0].clientX - imgStartX;
+                    imgPanY = e.touches[0].clientY - imgStartY;
+                    updateImgTransform();
+                } else if (e.touches.length === 2 && lastPinchDistance) {
+                    const currentDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const currentCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    const currentCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+                    const scaleDelta = currentDistance / lastPinchDistance;
                     const oldScale = imgScale;
-                    
-                    if (delta > 0) imgScale *= zoomSpeed;
-                    else imgScale /= zoomSpeed;
-                    
-                    if (imgScale < 0.5) imgScale = 0.5;
-                    if (imgScale > 15) imgScale = 15;
+                    imgScale = Math.max(0.2, Math.min(imgScale * scaleDelta, 20));
 
-                    const rect = sourceImg.getBoundingClientRect();
-                    const offsetX = mouseX - (rect.left + rect.width / 2);
-                    const offsetY = mouseY - (rect.top + rect.height / 2);
-                    const ratio = 1 - (imgScale / oldScale);
-                    
-                    imgPointX += offsetX * ratio;
-                    imgPointY += offsetY * ratio;
-                    sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
-                }, {passive: false});
+                    const wrapperRect = wrapper.getBoundingClientRect();
+                    const pointerX = currentCenterX - wrapperRect.left;
+                    const pointerY = currentCenterY - wrapperRect.top;
 
-                let initialDistance = 0;
-                let initialScale = 1;
+                    const unscaledX = (lastCenterX - wrapperRect.left - imgPanX) / oldScale;
+                    const unscaledY = (lastCenterY - wrapperRect.top - imgPanY) / oldScale;
 
-                sourceImg.addEventListener('touchstart', function(e) {
-                    if (e.touches.length === 1) {
-                        imgStart = { x: e.touches[0].clientX - imgPointX, y: e.touches[0].clientY - imgPointY };
-                        imgPanning = true;
-                        sourceImg.style.transition = 'none'; 
-                    } else if (e.touches.length === 2) {
-                        imgPanning = false;
-                        initialDistance = Math.hypot(
-                            e.touches[0].clientX - e.touches[1].clientX,
-                            e.touches[0].clientY - e.touches[1].clientY
-                        );
-                        initialScale = imgScale;
-                        sourceImg.style.transition = 'none'; 
-                    }
-                }, {passive: false});
+                    imgPanX = pointerX - unscaledX * imgScale;
+                    imgPanY = pointerY - unscaledY * imgScale;
 
-                sourceImg.addEventListener('touchmove', function(e) {
-                    e.preventDefault(); 
-                    if (e.touches.length === 1 && imgPanning) {
-                        imgPointX = e.touches[0].clientX - imgStart.x;
-                        imgPointY = e.touches[0].clientY - imgStart.y;
-                        sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
-                    } else if (e.touches.length === 2) {
-                        let currentDistance = Math.hypot(
-                            e.touches[0].clientX - e.touches[1].clientX,
-                            e.touches[0].clientY - e.touches[1].clientY
-                        );
-                        imgScale = initialScale * (currentDistance / initialDistance);
-                        if (imgScale < 0.5) imgScale = 0.5;
-                        if (imgScale > 15) imgScale = 15;
-                        sourceImg.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
-                    }
-                }, {passive: false});
+                    lastPinchDistance = currentDistance;
+                    lastCenterX = currentCenterX;
+                    lastCenterY = currentCenterY;
 
-                sourceImg.addEventListener('touchend', function(e) {
-                    if (e.touches.length < 2) {
-                        initialDistance = 0;
-                    }
-                    if (e.touches.length === 0) {
-                        imgPanning = false;
-                        sourceImg.style.transition = 'transform 0.1s ease';
-                    }
-                });
-            }
-        });
+                    updateImgTransform();
+                }
+            }, { passive: false });
+
+            wrapper.addEventListener('touchend', e => {
+                if (e.touches.length < 2) {
+                    lastPinchDistance = null;
+                    lastCenterX = null;
+                    lastCenterY = null;
+                }
+                if (e.touches.length === 0) isImgDragging = false;
+                if (e.touches.length === 1) { 
+                    isImgDragging = true;
+                    imgStartX = e.touches[0].clientX - imgPanX;
+                    imgStartY = e.touches[0].clientY - imgPanY;
+                }
+            });
+        }
 
         /* ===================================================
            FULL MAP (Main Page Map)
@@ -2084,12 +2569,10 @@
             const el = document.getElementById('mainMap');
             mainMapInstance = L.map(el).setView([32.5, 44.5], 6);
 
-            // طبقة قمر صناعي واقعية صخر
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19
             }).addTo(mainMapInstance);
 
-            // إضافة حدود المحافظات وأسماء المدن والمناطق الرسمية فوق الستلايت بشكل شفاف تماماً وبدون إعلانات
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19
             }).addTo(mainMapInstance);
@@ -2119,13 +2602,12 @@
                         </div>
                     `);
                 
-                // إظهار المعلومات عند التمرير (الماوس)
-                marker.on('mouseover', function (e) {
+                marker.on('click', function (e) {
                     marker.openPopup();
                 });
-
-                // التقريب فقط عند الضغط (الكليك/اللمس)
-                marker.on('click', function(e) {
+                
+                marker.on('dblclick', function (e) {
+                    L.DomEvent.stopPropagation(e);
                     mainMapInstance.flyTo(e.latlng, 13, {
                         animate: true,
                         duration: 1.2
