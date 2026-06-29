@@ -134,6 +134,11 @@
         .search-container.centered .search-bar-row {
             margin-top: 30vh;
         }
+        @media (max-width: 768px) {
+            .search-container.centered .search-bar-row {
+                margin-top: 2vh; /* تقليل القفزة في الموبايل */
+            }
+        }
 
         .nav-right { display: flex; gap: 12px; }
         .nav-left { display: flex; gap: 6px; }
@@ -5736,7 +5741,6 @@
             if (searchInput) {
                 searchInput.addEventListener('focus', () => {
                     isSearchFocused = true;
-                    document.getElementById('searchContainer').classList.remove('centered');
                     document.getElementById('topNav').style.transform = 'translateY(0)';
                     document.querySelector('.search-bar-row').style.transform = 'translateY(0)';
 
@@ -5748,9 +5752,6 @@
                 });
                 searchInput.addEventListener('blur', () => {
                     isSearchFocused = false;
-                    if (searchInput.value.trim().length === 0) {
-                        document.getElementById('searchContainer').classList.add('centered');
-                    }
                 });
             }
 
@@ -6193,9 +6194,7 @@
             detail.style.display = 'none'; area.style.display = 'none'; area.innerHTML = ''; 
 
             if (normalizedQ.length === 0) {
-                if (!document.activeElement || document.activeElement.id !== 'searchInput') {
-                    container.classList.add('centered');
-                }
+                container.classList.add('centered');
                 document.getElementById('autocompleteDropdown').style.display = 'none';
                 return;
             } else { container.classList.remove('centered'); }
